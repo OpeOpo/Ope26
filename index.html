@@ -321,14 +321,11 @@
         <div class="info"><strong>Modo Examen</strong><span>Sin pistas · puntuación final</span></div>
         <div class="arrow">›</div>
       </button>
-      <button class="menu-btn" onclick="showScreen('saved-exams')">
-        <div class="icon">🗂️</div>
-        <div class="info"><strong>Exámenes guardados</strong><span>Historial y repetición</span></div>
-        <div class="arrow">›</div>
-      </button>
-      <button class="menu-btn" onclick="showScreen('stats')">
-        <div class="icon">📊</div>
-        <div class="info"><strong>Estadísticas</strong><span>Progreso y rendimiento por bloque</span></div>
+    </div>
+    <div style="margin-top:20px">
+      <button class="menu-btn" style="padding:12px 16px;opacity:0.75" onclick="showScreen('stats')">
+        <div class="icon" style="font-size:1.1rem;width:32px">📊</div>
+        <div class="info"><strong style="font-size:0.85rem">Estadísticas</strong><span>Progreso y rendimiento</span></div>
         <div class="arrow">›</div>
       </button>
     </div>
@@ -1376,6 +1373,10 @@ function renderBlocksList() {
       </div>
       <button class="block-btn all-btn" onclick="launchExam()">
         <div><div class="b-title">🎲 Generar examen</div><div class="b-sub">Mezcla proporcional automática</div></div>
+        <div class="b-pct" style="color:var(--accent2)">→</div>
+      </button>
+      <button class="block-btn" style="margin-top:6px" onclick="showScreen('saved-exams')">
+        <div><div class="b-title">🗂️ Exámenes guardados</div><div class="b-sub">${data.savedExams.length} examen${data.savedExams.length !== 1 ? 'es' : ''} completado${data.savedExams.length !== 1 ? 's' : ''}</div></div>
         <div class="b-pct" style="color:var(--accent2)">→</div>
       </button>`;
     const hardQs = PREGUNTAS.filter(q=>data.difficult.includes(q.id));

@@ -322,7 +322,7 @@
         <div class="arrow">›</div>
       </button>
     </div>
-    <div style="margin-top:20px">
+    <div style="margin-top:40px">
       <button class="menu-btn" style="padding:12px 16px;opacity:0.75" onclick="showScreen('stats')">
         <div class="icon" style="font-size:1.1rem;width:32px">📊</div>
         <div class="info"><strong style="font-size:0.85rem">Estadísticas</strong><span>Progreso y rendimiento</span></div>
@@ -386,8 +386,7 @@
       <div class="q-text" id="study-pregunta"></div>
     </div>
     <div class="q-actions">
-      <button class="tag-btn" id="study-hard-btn" onclick="toggleTag('hard')">🔴 Difícil</button>
-      <button class="tag-btn tag-btn-repaso" onclick="launchDifficult()" id="study-repaso-btn">📋 Repasar difíciles</button>
+      <button class="tag-btn" id="study-hard-btn" onclick="toggleTag('hard')">🔴 Marcar como difícil</button>
     </div>
     <div class="options-list" id="study-opts"></div>
     <div id="study-feedback" style="display:none"></div>
@@ -420,9 +419,6 @@
       <button class="btn-secondary" id="exam-prev-btn"   onclick="examNav(-1)">← Ant</button>
       <button class="btn-primary"   id="exam-next-btn"   onclick="examNav(1)">Siguiente →</button>
       <button class="btn-secondary" id="exam-finish-btn" onclick="finishExam()" style="display:none">Entregar</button>
-    </div>
-    <div style="padding:12px 20px 0">
-      <button class="tag-btn tag-btn-repaso" style="width:100%" onclick="launchDifficult()">📋 Repasar difíciles</button>
     </div>
   </div>
 
@@ -1371,21 +1367,19 @@ function renderBlocksList() {
         <strong style="color:var(--text)">85 Fisio + 15 General</strong><br>
         <span style="font-size:0.75rem">proporción real del examen</span>
       </div>
-      <button class="block-btn all-btn" onclick="launchExam()">
-        <div><div class="b-title">🎲 Generar examen</div><div class="b-sub">Mezcla proporcional automática</div></div>
-        <div class="b-pct" style="color:var(--accent2)">→</div>
+      <button class="block-btn all-btn" onclick="launchExam()"
+        style="border-color:var(--accent);border-width:2px;justify-content:center;text-align:center">
+        <div style="text-align:center">
+          <div class="b-title">🎲 Generar examen</div>
+          <div class="b-sub">Mezcla proporcional automática</div>
+        </div>
       </button>
-      <button class="block-btn" style="margin-top:6px" onclick="showScreen('saved-exams')">
-        <div><div class="b-title">🗂️ Exámenes guardados</div><div class="b-sub">${data.savedExams.length} examen${data.savedExams.length !== 1 ? 'es' : ''} completado${data.savedExams.length !== 1 ? 's' : ''}</div></div>
-        <div class="b-pct" style="color:var(--accent2)">→</div>
-      </button>`;
-    const hardQs = PREGUNTAS.filter(q=>data.difficult.includes(q.id));
-    if (hardQs.length) {
-      html += `<button class="block-btn" style="border-color:rgba(239,68,68,0.3);margin-top:6px" onclick="launchDifficult()">
-        <div><div class="b-title">📋 Repasar difíciles</div><div class="b-sub">${hardQs.length} preguntas marcadas</div></div>
-        <div class="b-pct" style="color:var(--red)">→</div>
-      </button>`;
-    }
+      <div style="margin-top:40px">
+        <button class="block-btn" onclick="showScreen('saved-exams')">
+          <div><div class="b-title">🗂️ Exámenes guardados</div><div class="b-sub">${data.savedExams.length} examen${data.savedExams.length !== 1 ? 'es' : ''} completado${data.savedExams.length !== 1 ? 's' : ''}</div></div>
+          <div class="b-pct" style="color:var(--accent2)">→</div>
+        </button>
+      </div>`;
   } else {
     // Estudio: Todas + repasar difíciles + bloques
     const allPct = blockPct(PREGUNTAS);
@@ -1528,6 +1522,13 @@ function renderSavedExams() {
 // ══════════════════════════════════════════
 //  STUDY
 // ══════════════════════════════════════════
+function updateHardBtn(qId) {
+  const isHard = data.difficult.includes(qId);
+  const btn = document.getElementById('study-hard-btn');
+  btn.className   = 'tag-btn' + (isHard ? ' active-hard' : '');
+  btn.textContent = isHard ? '✅ Marcada como difícil' : '🔴 Marcar como difícil';
+}
+
 function renderStudyQ() {
   const q = studyList[studyIndex];
   studyAnswered = false;
@@ -1538,7 +1539,7 @@ function renderStudyQ() {
   document.getElementById('study-num').textContent     = `Pregunta #${q.id}`;
   document.getElementById('study-pregunta').textContent = q.pregunta;
 
-  document.getElementById('study-hard-btn').className = 'tag-btn'+(data.difficult.includes(q.id)?' active-hard':'');
+  updateHardBtn(q.id);
 
   const optsEl = document.getElementById('study-opts');
   optsEl.innerHTML = '';
@@ -1606,7 +1607,7 @@ function selectStudyAnswer(key, q) {
 
   document.getElementById('study-next-btn').disabled = false;
   document.getElementById('study-score').textContent = `✓ ${Object.values(data.answered).filter(a=>a.correct).length} · ✗ ${Object.values(data.answered).filter(a=>!a.correct).length}`;
-  document.getElementById('study-hard-btn').className = 'tag-btn'+(data.difficult.includes(q.id)?' active-hard':'');
+  updateHardBtn(q.id);
 }
 
 function studyNext() { studyIndex < studyList.length-1 ? (studyIndex++, renderStudyQ()) : goHome(); }
@@ -1632,7 +1633,7 @@ function toggleTag(type) {
   const i = data.difficult.indexOf(q.id);
   if (i === -1) data.difficult.push(q.id); else data.difficult.splice(i,1);
   saveData(data);
-  document.getElementById('study-hard-btn').className = 'tag-btn'+(data.difficult.includes(q.id)?' active-hard':'');
+  updateHardBtn(q.id);
 }
 
 // ══════════════════════════════════════════

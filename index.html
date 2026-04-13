@@ -1701,11 +1701,13 @@ function selectStudyAnswer(key, q) {
     fb.style.border = '1px solid var(--border)';
     fb.innerHTML = `📝 <strong>Respuesta registrada.</strong> No hay clave disponible para esta pregunta.`;
   } else if (correct) {
-    fb.className = 'feedback-box ok';
-    fb.style.border = '';
-    fb.innerHTML = isMastered
-      ? `🏆 <strong>¡Pregunta dominada!</strong> 10 aciertos consecutivos.`
-      : `✅ <strong>¡Correcto!</strong> Racha: ${streak}/10${streak>1?` · faltan ${10-streak} para dominarla`:''}`;
+    if (isMastered) {
+      fb.className = 'feedback-box ok';
+      fb.style.border = '';
+      fb.innerHTML = `🏆 <strong>¡Pregunta dominada!</strong> 10 aciertos consecutivos.`;
+    } else {
+      fb.style.display = 'none';
+    }
   } else {
     fb.className = 'feedback-box ko';
     fb.style.border = '';
@@ -1907,6 +1909,16 @@ function renderStats() {
 // ══════════════════════════════════════════
 //  DIFFICULT SCREEN
 // ══════════════════════════════════════════
+function launchDifficult() {
+  const hardQs = PREGUNTAS.filter(q => data.difficult.includes(q.id));
+  if (!hardQs.length) { alert('No tienes preguntas marcadas como difíciles todavía.'); return; }
+  studyList  = shuffle(hardQs.slice());
+  studyIndex = 0;
+  document.getElementById('study-title').textContent = `Repaso Difíciles · 🔀 (${studyList.length})`;
+  showScreen('study');
+  renderStudyQ();
+}
+
 function launchMastered() {
   const masteredQs = PREGUNTAS.filter(q => data.mastered.includes(q.id));
   if (!masteredQs.length) { alert('No tienes preguntas dominadas todavía.'); return; }

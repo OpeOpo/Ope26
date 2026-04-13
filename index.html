@@ -1281,13 +1281,14 @@ const EXAM_TOTAL       = 100; // preguntas por examen
 const LS_KEY = 'opoTest_v2';
 
 function defaultData() {
-  return { answered:{}, favorites:[], difficult:[], mastered:[], streaks:{}, examsCount:0, lastExam:null, savedExams:[], examSeenIds:{} };
+  return { answered:{}, favorites:[], difficult:[], mastered:[], streaks:{}, examsCount:0, lastExam:null, savedExams:[], examSeenIds:{}, blockStats:{} };
 }
 function migrateData(d) {
   if (!d.mastered)    d.mastered    = [];
   if (!d.streaks)     d.streaks     = {};
   if (!d.savedExams)  d.savedExams  = [];
   if (!d.examSeenIds) d.examSeenIds = {};
+  if (!d.blockStats)  d.blockStats  = {};
   return d;
 }
 function loadData() {
@@ -1302,7 +1303,7 @@ function saveData(d) { localStorage.setItem(LS_KEY, JSON.stringify(d)); }
 let data = loadData();
 let selectorMode  = 'study';
 let selectedOrder = 'sequential';
-let studyList = [], studyIndex = 0, studyAnswered = false;
+let studyList = [], studyIndex = 0, studyAnswered = false, currentBlockKey = null;
 let examList  = [], examIndex  = 0, examAnswers  = {}, lastExamLabel = '';
 
 // ══════════════════════════════════════════
@@ -1462,11 +1463,28 @@ function renderBlocksList() {
       </div>`;
   } else {
     // Estudio: Todas + repasar difíciles + bloques
-    const allPct = blockPct(PREGUNTAS);
+
+    function blockProgress(qs) {
+      const done = qs.filter(q => data.answered[q.id]).length;
+      return { done, total: qs.length };
+    }
+
+    function progressLabel(qs) {
+      const { done, total } = blockProgress(qs);
+      return `${done}/${total}`;
+    }
+
+    function progressColor(qs) {
+      const { done, total } = blockProgress(qs);
+      if (done === 0)     return 'var(--muted)';
+      if (done === total) return 'var(--green)';
+      return 'var(--accent2)';
+    }
+
     html += `
       <button class="block-btn all-btn" onclick="launchStudy(null)">
         <div><div class="b-title">📚 Todas las preguntas</div><div class="b-sub">${PREGUNTAS.length} preguntas</div></div>
-        <div class="b-pct" style="color:${pctColor(allPct)}">${allPct !== null ? allPct+'%' : '—'}</div>
+        <div class="b-pct" style="color:${progressColor(PREGUNTAS)}">${progressLabel(PREGUNTAS)}</div>
       </button>`;
     const hardQs = PREGUNTAS.filter(q=>data.difficult.includes(q.id));
     if (hardQs.length) {
@@ -1478,32 +1496,27 @@ function renderBlocksList() {
 
     // Sección Fisio
     html += `<div class="section-title" style="margin-top:14px">🩺 Fisioterapia</div>`;
-    // Primero el bloque "Todas Fisio"
     const fisioAll = blocks.find(b => b.key === 'fisio_all');
-    const pAll = blockPct(fisioAll.questions);
     html += `
       <button class="block-btn all-btn" onclick="launchStudy('fisio_all')">
         <div><div class="b-title">🩺 Fisio · Todas</div><div class="b-sub">${fisioAll.questions.length} preguntas</div></div>
-        <div class="b-pct" style="color:${pctColor(pAll)}">${pAll !== null ? pAll+'%' : '—'}</div>
+        <div class="b-pct" style="color:${progressColor(fisioAll.questions)}">${progressLabel(fisioAll.questions)}</div>
       </button>`;
-    // Luego los 5 bloques de 100
     blocks.filter(b => b.categoria === 'fisio' && b.key !== 'fisio_all').forEach(b => {
-      const p = blockPct(b.questions);
       html += `
         <button class="block-btn" onclick="launchStudy('${b.key}')">
           <div><div class="b-title">${b.label}</div><div class="b-sub">${b.range}</div></div>
-          <div class="b-pct" style="color:${pctColor(p)}">${p !== null ? p+'%' : '—'}</div>
+          <div class="b-pct" style="color:${progressColor(b.questions)}">${progressLabel(b.questions)}</div>
         </button>`;
     });
 
     // Sección General
     html += `<div class="section-title" style="margin-top:14px">📋 Temario General</div>`;
     blocks.filter(b => b.categoria === 'general').forEach(b => {
-      const p = blockPct(b.questions);
       html += `
         <button class="block-btn" onclick="launchStudy('${b.key}')">
           <div><div class="b-title">${b.label}</div><div class="b-sub">${b.range}</div></div>
-          <div class="b-pct" style="color:${pctColor(p)}">${p !== null ? p+'%' : '—'}</div>
+          <div class="b-pct" style="color:${progressColor(b.questions)}">${progressLabel(b.questions)}</div>
         </button>`;
     });
   }
@@ -1520,6 +1533,7 @@ function launchStudy(blockKey) {
   const orderIcon = selectedOrder === 'random' ? ' · 🔀' : ' · 🔢';
 
   studyList = ordered;
+  currentBlockKey = blockKey;
 
   // En modo secuencial, arrancar desde la primera no contestada
   if (selectedOrder === 'sequential') {
@@ -1719,7 +1733,29 @@ function selectStudyAnswer(key, q) {
   updateHardBtn(q.id);
 }
 
-function studyNext() { studyIndex < studyList.length-1 ? (studyIndex++, renderStudyQ()) : goHome(); }
+function studyNext() {
+  if (studyIndex < studyList.length - 1) {
+    studyIndex++;
+    renderStudyQ();
+  } else {
+    const allDone = studyList.every(q => data.answered[q.id]);
+    if (allDone) {
+      // Calcular % acierto del intento completado
+      const correct = studyList.filter(q => data.answered[q.id] && data.answered[q.id].correct).length;
+      const pct     = Math.round(correct / studyList.length * 100);
+      // Guardar stats del bloque (usar IDs como clave)
+      const key = studyList.map(q=>q.id).sort((a,b)=>a-b).join(',').slice(0,40);
+      if (!data.blockStats[key]) data.blockStats[key] = { completions:0, lastPct:0 };
+      data.blockStats[key].completions++;
+      data.blockStats[key].lastPct = pct;
+      // Resetear respuestas de este bloque
+      studyList.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
+      saveData(data);
+      alert('¡Has completado todas las preguntas de este bloque! El contador se reinicia para que puedas repetirlas.');
+    }
+    goHome();
+  }
+}
 function studyPrev() { if (studyIndex > 0) { studyIndex--; renderStudyQ(); } }
 
 function goToQuestion() {
@@ -1823,24 +1859,29 @@ function finishExam() {
 //  STATS
 // ══════════════════════════════════════════
 function renderStats() {
-  const total   = Object.keys(data.answered).length;
-  const correct = Object.values(data.answered).filter(a=>a.correct).length;
-  const pct     = total>0 ? Math.round(correct/total*100) : 0;
+  const totalQs    = PREGUNTAS.length;
+  const nDifficult = data.difficult.length;
+  const nMastered  = data.mastered.length;
+  const pctDiff    = Math.round(nDifficult / totalQs * 100);
+  const pctMast    = Math.round(nMastered  / totalQs * 100);
+
+  // Helper: clave de bloque (misma lógica que studyNext)
+  function blockKey(qs) {
+    return qs.map(q=>q.id).sort((a,b)=>a-b).join(',').slice(0,40);
+  }
 
   let html = `
     <div>
       <div class="section-title">Global</div>
-      <div class="global-row">
-        <div class="g-card"><div class="gv">${total}</div><div class="gl">Respondidas</div></div>
-        <div class="g-card"><div class="gv" style="color:var(--green)">${correct}</div><div class="gl">Correctas</div></div>
-        <div class="g-card"><div class="gv" style="color:var(--accent2)">${pct}%</div><div class="gl">Acierto</div></div>
-      </div>
-    </div>
-    <div>
-      <div class="global-row">
-        <div class="g-card"><div class="gv" style="color:var(--red)">${data.difficult.length}</div><div class="gl">Difíciles</div></div>
-        <div class="g-card"><div class="gv" style="color:var(--yellow)">${Object.values(data.streaks).filter(s=>s>0&&s<10).length}</div><div class="gl">En racha</div></div>
-        <div class="g-card"><div class="gv" style="color:#a78bfa">${data.mastered.length}</div><div class="gl">Dominadas</div></div>
+      <div class="global-row" style="grid-template-columns:1fr 1fr">
+        <div class="g-card">
+          <div class="gv" style="color:var(--red)">${nDifficult} <span style="font-size:0.75rem;color:var(--muted)">${pctDiff}%</span></div>
+          <div class="gl">Difíciles</div>
+        </div>
+        <div class="g-card">
+          <div class="gv" style="color:#a78bfa">${nMastered} <span style="font-size:0.75rem;color:var(--muted)">${pctMast}%</span></div>
+          <div class="gl">Dominadas</div>
+        </div>
       </div>
     </div>
     <div>
@@ -1850,26 +1891,36 @@ function renderStats() {
   // Fisio
   html += `<div style="font-size:0.75rem;color:var(--accent2);font-family:var(--mono);padding:2px 0">🩺 FISIOTERAPIA</div>`;
   getBlocks().filter(b => b.categoria === 'fisio').forEach(b => {
-    const p = blockPct(b.questions);
-    const c = pctColor(p);
+    const bk    = blockKey(b.questions);
+    const stats = data.blockStats[bk] || { completions:0, lastPct:null };
+    const color = stats.lastPct !== null
+      ? (stats.lastPct >= 70 ? 'var(--green)' : stats.lastPct >= 40 ? 'var(--yellow)' : 'var(--red)')
+      : 'var(--muted)';
     html += `
       <div class="bloque-row">
         <div class="b-name">${b.label}<br><span style="font-size:0.72rem;color:var(--muted)">${b.range}</span></div>
-        <div class="mini-bar"><div class="mini-fill" style="width:${p||0}%;background:${c}"></div></div>
-        <div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:${c}">${p!==null?p+'%':'—'}</div>
+        <div style="text-align:right;min-width:90px">
+          <div style="font-size:0.78rem;color:var(--muted)">${stats.completions} vuelta${stats.completions !== 1 ? 's' : ''}</div>
+          <div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:${color}">${stats.lastPct !== null ? stats.lastPct+'%' : '—'}</div>
+        </div>
       </div>`;
   });
 
   // General
   html += `<div style="font-size:0.75rem;color:var(--accent2);font-family:var(--mono);padding:6px 0 2px">📋 TEMARIO GENERAL</div>`;
   getBlocks().filter(b => b.categoria === 'general').forEach(b => {
-    const p = blockPct(b.questions);
-    const c = pctColor(p);
+    const bk    = blockKey(b.questions);
+    const stats = data.blockStats[bk] || { completions:0, lastPct:null };
+    const color = stats.lastPct !== null
+      ? (stats.lastPct >= 70 ? 'var(--green)' : stats.lastPct >= 40 ? 'var(--yellow)' : 'var(--red)')
+      : 'var(--muted)';
     html += `
       <div class="bloque-row">
         <div class="b-name">${b.label}<br><span style="font-size:0.72rem;color:var(--muted)">${b.range}</span></div>
-        <div class="mini-bar"><div class="mini-fill" style="width:${p||0}%;background:${c}"></div></div>
-        <div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:${c}">${p!==null?p+'%':'—'}</div>
+        <div style="text-align:right;min-width:90px">
+          <div style="font-size:0.78rem;color:var(--muted)">${stats.completions} vuelta${stats.completions !== 1 ? 's' : ''}</div>
+          <div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:${color}">${stats.lastPct !== null ? stats.lastPct+'%' : '—'}</div>
+        </div>
       </div>`;
   });
 

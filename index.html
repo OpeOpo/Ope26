@@ -372,6 +372,55 @@
     </div>
   </div>
 
+  <!-- MODAL SALIR EXAMEN -->
+  <div id="leave-exam-modal" style="
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:24px">
+    <div style="
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">⚠️ ¿Salir del examen?</div>
+        <p style="font-size:0.88rem;line-height:1.6;color:var(--muted)">
+          Si sales ahora perderás todo el progreso del examen actual. Esta acción no se puede deshacer.
+        </p>
+      </div>
+      <button onclick="goHome(); document.getElementById('leave-exam-modal').style.display='none'"
+        style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        🚪 Salir y perder el examen
+      </button>
+      <button onclick="document.getElementById('leave-exam-modal').style.display='none'"
+        style="background:transparent;border:1px solid var(--border);color:var(--text);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        Seguir con el examen
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL BLOQUE COMPLETADO -->
+  <div id="block-complete-modal" style="
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:24px">
+    <div style="
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">🎉 ¡Bloque completado!</div>
+        <p id="block-complete-desc" style="font-size:0.88rem;line-height:1.6;color:var(--muted)"></p>
+      </div>
+      <button onclick="blockCompleteReset()" class="btn-primary">🔄 Borrar y reiniciar</button>
+      <button onclick="blockCompleteKeep()"
+        style="background:transparent;border:1px solid var(--border);color:var(--text);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        📖 Seguir consultando
+      </button>
+    </div>
+  </div>
+
   <!-- HELP MODAL -->
   <div id="help-modal" style="
       display:none;position:fixed;inset:0;z-index:1000;
@@ -393,42 +442,52 @@
 
         <div class="help-section">
           <div class="help-title">🎯 Modo Estudio</div>
-          <div class="help-body">Practica pregunta a pregunta con feedback inmediato. Puedes elegir entre estudiar en orden secuencial (recomendado para empezar) o en orden aleatorio. Elige un bloque concreto de 100 preguntas o las 500 de fisio de golpe. En modo secuencial, la app recuerda por dónde ibas y retoma desde la última pregunta no respondida.</div>
+          <div class="help-body">Practica pregunta a pregunta con feedback inmediato. Elige entre orden secuencial (recomendado para empezar) o aleatorio, y selecciona un bloque concreto de 100 preguntas o el banco completo. En modo secuencial la app retoma desde la última pregunta no respondida. Puedes retroceder a preguntas ya contestadas para revisar tu respuesta, y al llegar a la última el botón "Siguiente" vuelve a la primera.</div>
+        </div>
+
+        <div class="help-section">
+          <div class="help-title">🔄 Reiniciar bloque</div>
+          <div class="help-body">Dentro del modo estudio hay un botón "Reiniciar bloque" que borra el progreso de todas las preguntas del bloque actual y te lleva a la primera. Al completar todas las preguntas también aparece un modal con la opción de borrar y reiniciar o seguir consultando.</div>
         </div>
 
         <div class="help-section">
           <div class="help-title">📝 Modo Examen</div>
-          <div class="help-body">Simula las condiciones reales del examen: 100 preguntas (85 de fisioterapia + 15 de temario general), sin feedback hasta el final. Puedes navegar libremente entre preguntas y dejar algunas en blanco. Al terminar recibes tu nota. Cada examen se guarda automáticamente para poder repetirlo más adelante.</div>
+          <div class="help-body">Simula las condiciones reales: 100 preguntas (85 fisio + 15 general) sin feedback hasta el final. La navegación es circular — al llegar a la última puedes seguir avanzando y vuelves a la primera. Cada examen se guarda automáticamente al entregarlo para poder repetirlo.</div>
+        </div>
+
+        <div class="help-section">
+          <div class="help-title">⚠️ Marcar como dudosa en examen</div>
+          <div class="help-body">Durante el examen puedes marcar preguntas como dudosas. El contador superior muestra cuántas tienes marcadas. El botón "Ir a siguiente sin contestar / dudosa" te lleva directamente a la siguiente pregunta pendiente o dudosa, para hacer una segunda vuelta eficiente sin pasar por las que ya tienes seguras.</div>
         </div>
 
         <div class="help-section">
           <div class="help-title">🔀 Distribución inteligente</div>
-          <div class="help-body">Los exámenes nuevos priorizan preguntas que aún no has visto en exámenes anteriores (80%), mezclando con un 20% de preguntas ya vistas. Así cubres el banco completo antes de repetir.</div>
+          <div class="help-body">Los exámenes nuevos priorizan preguntas no vistas en exámenes anteriores (80%), mezclando con un 20% de repetidas. Así cubres el banco completo antes de empezar a repetir en serio.</div>
         </div>
 
         <div class="help-section">
           <div class="help-title">🔴 Marcar como difícil</div>
-          <div class="help-body">Durante el estudio puedes marcar cualquier pregunta como difícil. Estas preguntas se acumulan en la sección "Difíciles · Dominadas", donde puedes repasarlas cuando quieras. Si fallas una pregunta, se marca como difícil automáticamente.</div>
+          <div class="help-body">En modo estudio puedes marcar cualquier pregunta como difícil. Si fallas también se marca automáticamente. Desde la sección "Difíciles · Dominadas" puedes repasar solo esas preguntas cuando quieras.</div>
         </div>
 
         <div class="help-section">
           <div class="help-title">🏆 Preguntas dominadas</div>
-          <div class="help-body">Cuando aciertas la misma pregunta 10 veces seguidas, pasa a "Dominadas". Esto no la elimina de los bloques normales, simplemente te indica que la tienes bien consolidada. También puedes repasar las dominadas por si acaso.</div>
+          <div class="help-body">Cuando aciertas la misma pregunta 10 veces seguidas pasa a "Dominadas". No desaparece de los bloques normales — es solo un indicador de que la tienes bien consolidada.</div>
         </div>
 
         <div class="help-section">
           <div class="help-title">📊 Estadísticas</div>
-          <div class="help-body">Consulta tu progreso global y por bloque: preguntas respondidas, porcentaje de acierto, preguntas difíciles y dominadas. Desde aquí también puedes borrar todas las estadísticas para empezar de cero.</div>
+          <div class="help-body">Muestra el número de preguntas difíciles y dominadas con su porcentaje sobre el total. Por bloque aparece el número de vueltas completadas y el porcentaje de acierto del último intento. Desde aquí también puedes borrar todo para empezar de cero.</div>
         </div>
 
         <div class="help-section">
           <div class="help-title">☀️ / 🌙 Modo diurno y nocturno</div>
-          <div class="help-body">Cambia entre modo oscuro y claro con el botón en la esquina superior derecha del inicio. La preferencia se guarda y se mantiene entre sesiones.</div>
+          <div class="help-body">El toggle está disponible en todas las pantallas de la app, no solo en el inicio. Tu preferencia se guarda entre sesiones.</div>
         </div>
 
         <div class="help-section" style="border:none;padding-bottom:0">
           <div class="help-title">⚠️ Sobre las respuestas</div>
-          <div class="help-body">Las respuestas correctas están señaladas en verde al contestar cada pregunta. Ten en cuenta que algunas preguntas pueden admitir más de una respuesta válida según la fuente consultada — si tienes dudas sobre una respuesta concreta, contrástala con tu material de estudio.</div>
+          <div class="help-body">Las respuestas han sido extraídas poniendo en común las claves de varios sindicatos, principalmente ESK y LAB. Algunas preguntas pueden admitir más de una respuesta válida según la fuente — si tienes dudas sobre alguna, contrástala con tu material. Las preguntas impugnadas y las dudosas están señaladas específicamente.</div>
         </div>
 
       </div>
@@ -500,6 +559,13 @@
       <button class="btn-secondary" id="study-prev-btn" onclick="studyPrev()" style="display:none">← Ant</button>
       <button class="btn-primary"   id="study-next-btn" onclick="studyNext()" disabled>Siguiente →</button>
     </div>
+    <div style="padding:10px 20px 0;display:flex;justify-content:center">
+      <button onclick="resetBlock()"
+        style="background:transparent;border:none;color:var(--muted);font-size:0.75rem;
+               font-family:var(--sans);cursor:pointer;text-decoration:underline;padding:4px">
+        🔄 Reiniciar bloque
+      </button>
+    </div>
   </div>
 
   <!-- EXAM -->
@@ -522,10 +588,24 @@
       <div class="q-text" id="exam-pregunta"></div>
     </div>
     <div class="options-list" id="exam-opts"></div>
+    <div style="padding:8px 20px 0;display:flex;justify-content:flex-end">
+      <button id="exam-doubtful-btn" onclick="toggleExamDoubtful()"
+        style="background:transparent;border:1px solid var(--yellow);color:var(--yellow);
+               border-radius:8px;padding:5px 12px;font-size:0.75rem;cursor:pointer;font-family:var(--sans)">
+        ⚠️ Marcar como dudosa
+      </button>
+    </div>
     <div class="nav-btns">
       <button class="btn-secondary" id="exam-prev-btn"   onclick="examNav(-1)">← Ant</button>
       <button class="btn-primary"   id="exam-next-btn"   onclick="examNav(1)">Siguiente →</button>
       <button class="btn-secondary" id="exam-finish-btn" onclick="finishExam()" style="display:none">Entregar</button>
+    </div>
+    <div style="padding:8px 20px 0;display:flex;justify-content:center" id="exam-pending-wrap" style="display:none">
+      <button id="exam-pending-btn" onclick="examNavPending()"
+        style="background:transparent;border:none;color:var(--muted);font-size:0.75rem;
+               font-family:var(--sans);cursor:pointer;text-decoration:underline;padding:4px">
+        ⏭ Ir a siguiente sin contestar / dudosa
+      </button>
     </div>
   </div>
 
@@ -1337,7 +1417,7 @@ let data = loadData();
 let selectorMode  = 'study';
 let selectedOrder = 'sequential';
 let studyList = [], studyIndex = 0, studyAnswered = false, currentBlockKey = null;
-let examList  = [], examIndex  = 0, examAnswers  = {}, lastExamLabel = '';
+let examList  = [], examIndex  = 0, examAnswers  = {}, examDoubtful = new Set(), lastExamLabel = '';
 
 // ══════════════════════════════════════════
 //  BLOQUES
@@ -1586,6 +1666,7 @@ function launchExam() {
   examList      = buildExamPool();
   examIndex     = 0;
   examAnswers   = {};
+  examDoubtful  = new Set();
   lastExamLabel = 'Examen oficial';
   document.getElementById('exam-title').textContent = 'Modo Examen · 🔀 Proporcional';
   showScreen('exam');
@@ -1598,9 +1679,10 @@ function repeatExam(examIdx) {
   const ids = saved.ids;
   const pool = ids.map(id => PREGUNTAS.find(q => q.id === id)).filter(Boolean);
   if (!pool.length) return;
-  examList    = pool;
-  examIndex   = 0;
-  examAnswers = {};
+  examList      = pool;
+  examIndex     = 0;
+  examAnswers   = {};
+  examDoubtful  = new Set();
   lastExamLabel = `Repetición Examen #${saved.num}`;
   document.getElementById('exam-title').textContent = `Examen #${saved.num} · Repetición`;
   showScreen('exam');
@@ -1659,7 +1741,8 @@ function updateHardBtn(qId) {
 
 function renderStudyQ() {
   const q = studyList[studyIndex];
-  studyAnswered = false;
+  const prev = data.answered[q.id];
+  studyAnswered = !!prev;
 
   document.getElementById('study-counter').textContent = `Pregunta ${studyIndex+1} de ${studyList.length}`;
   document.getElementById('study-score').textContent   = `✓ ${Object.values(data.answered).filter(a=>a.correct).length} · ✗ ${Object.values(data.answered).filter(a=>!a.correct).length}`;
@@ -1681,9 +1764,68 @@ function renderStudyQ() {
 
   const fb = document.getElementById('study-feedback');
   fb.style.display = 'none'; fb.innerHTML = '';
-  document.getElementById('study-next-btn').disabled    = true;
-  document.getElementById('study-next-btn').textContent = studyIndex < studyList.length-1 ? 'Siguiente →' : 'Finalizar';
+  fb.style.background = ''; fb.style.border = '';
+
+  const isLast = studyIndex === studyList.length - 1;
+  document.getElementById('study-next-btn').textContent = isLast ? 'Volver al inicio →' : 'Siguiente →';
   document.getElementById('study-prev-btn').style.display = studyIndex > 0 ? 'block' : 'none';
+
+  if (prev) {
+    // Mostrar respuesta guardada
+    document.getElementById('study-next-btn').disabled = false;
+    const keys = ['a','b','c','d'];
+    const estado    = q.estado || null;
+    const impugnada = estado === 'impugnada';
+    const dudosa    = estado === 'dudosa';
+    const hasAnswer = q.correcta !== null && !impugnada;
+    const key       = prev.selectedKey;
+    const correct   = prev.correct;
+
+    document.querySelectorAll('#study-opts .opt-btn').forEach((btn,i) => {
+      btn.disabled = true;
+      if (impugnada) {
+      } else if (dudosa && keys[i] === q.correcta) {
+        btn.classList.add('doubtful');
+      } else if (!dudosa && hasAnswer && keys[i] === q.correcta) {
+        btn.classList.add('correct');
+      } else if (hasAnswer && keys[i] === key && !correct) {
+        btn.classList.add('wrong');
+      } else if (!hasAnswer && keys[i] === key) {
+        btn.classList.add('selected-exam');
+      }
+    });
+
+    fb.style.display = 'block';
+    if (impugnada) {
+      fb.className = 'feedback-box';
+      fb.style.background = 'rgba(239,68,68,0.08)';
+      fb.style.border = '1px solid rgba(239,68,68,0.2)';
+      fb.innerHTML = `🚫 <strong>Pregunta impugnada.</strong> Esta pregunta está siendo impugnada por estar mal planteada.`;
+    } else if (dudosa) {
+      fb.className = 'feedback-box';
+      fb.style.background = 'rgba(245,158,11,0.1)';
+      fb.style.border = '1px solid rgba(245,158,11,0.3)';
+      fb.innerHTML = `⚠️ <strong>Respuesta dudosa.</strong> La opción en amarillo es la respuesta oficial, pero tiene controversia.`;
+    } else if (!hasAnswer) {
+      fb.className = 'feedback-box';
+      fb.style.background = 'var(--surface2)';
+      fb.style.border = '1px solid var(--border)';
+      fb.innerHTML = `📝 <strong>Respuesta registrada.</strong> No hay clave disponible para esta pregunta.`;
+    } else if (correct) {
+      const isMastered = data.mastered.includes(q.id);
+      if (isMastered) {
+        fb.className = 'feedback-box ok';
+        fb.innerHTML = `🏆 <strong>¡Pregunta dominada!</strong> 10 aciertos consecutivos.`;
+      } else {
+        fb.style.display = 'none';
+      }
+    } else {
+      fb.className = 'feedback-box ko';
+      fb.innerHTML = `❌ <strong>Incorrecto.</strong> Correcta: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong>`;
+    }
+  } else {
+    document.getElementById('study-next-btn').disabled = true;
+  }
 }
 
 function selectStudyAnswer(key, q) {
@@ -1772,25 +1914,50 @@ function studyNext() {
     studyIndex++;
     renderStudyQ();
   } else {
+    // Última pregunta: volver a la primera
+    studyIndex = 0;
+    renderStudyQ();
+    // Si todas contestadas, mostrar modal
     const allDone = studyList.every(q => data.answered[q.id]);
     if (allDone) {
-      // Calcular % acierto del intento completado
       const correct = studyList.filter(q => data.answered[q.id] && data.answered[q.id].correct).length;
       const pct     = Math.round(correct / studyList.length * 100);
-      // Guardar stats del bloque (usar IDs como clave)
+      // Guardar stats
       const key = studyList.map(q=>q.id).sort((a,b)=>a-b).join(',').slice(0,40);
       if (!data.blockStats[key]) data.blockStats[key] = { completions:0, lastPct:0 };
       data.blockStats[key].completions++;
       data.blockStats[key].lastPct = pct;
-      // Resetear respuestas de este bloque
-      studyList.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
       saveData(data);
-      alert('¡Has completado todas las preguntas de este bloque! El contador se reinicia para que puedas repetirlas.');
+      document.getElementById('block-complete-desc').textContent =
+        `Has respondido todas las preguntas del bloque con un ${pct}% de acierto. ¿Qué quieres hacer?`;
+      document.getElementById('block-complete-modal').style.display = 'flex';
     }
-    goHome();
   }
 }
-function studyPrev() { if (studyIndex > 0) { studyIndex--; renderStudyQ(); } }
+
+function studyPrev() {
+  if (studyIndex > 0) { studyIndex--; renderStudyQ(); }
+}
+
+function blockCompleteReset() {
+  document.getElementById('block-complete-modal').style.display = 'none';
+  studyList.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
+  saveData(data);
+  studyIndex = 0;
+  renderStudyQ();
+}
+
+function blockCompleteKeep() {
+  document.getElementById('block-complete-modal').style.display = 'none';
+}
+
+function resetBlock() {
+  if (!confirm('¿Reiniciar bloque? Se borrará el progreso de todas las preguntas de este bloque.')) return;
+  studyList.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
+  saveData(data);
+  studyIndex = 0;
+  renderStudyQ();
+}
 
 function goToQuestion() {
   const input = document.getElementById('goto-input');
@@ -1821,11 +1988,26 @@ function toggleTag(type) {
 function renderExamQ() {
   const q   = examList[examIndex];
   const sel = examAnswers[examIndex];
+  const isDubtful = examDoubtful.has(examIndex);
+  const answered  = Object.keys(examAnswers).length;
+  const pending   = examList.length - answered;
+  const nDubtful  = examDoubtful.size;
+
   document.getElementById('exam-counter').textContent   = `Pregunta ${examIndex+1} de ${examList.length}`;
-  document.getElementById('exam-remaining').textContent = `Sin responder: ${examList.length-Object.keys(examAnswers).length}`;
+  document.getElementById('exam-remaining').textContent = `Sin responder: ${pending}${nDubtful ? ` · ⚠️ ${nDubtful}` : ''}`;
   document.getElementById('exam-prog').style.width      = (examIndex/examList.length*100).toFixed(1)+'%';
   document.getElementById('exam-num').textContent       = `Pregunta #${q.id}`;
   document.getElementById('exam-pregunta').textContent  = q.pregunta;
+
+  // Botón dudosa
+  const dBtn = document.getElementById('exam-doubtful-btn');
+  if (isDubtful) {
+    dBtn.style.background = 'rgba(245,158,11,0.15)';
+    dBtn.textContent = '⚠️ Marcada como dudosa';
+  } else {
+    dBtn.style.background = 'transparent';
+    dBtn.textContent = '⚠️ Marcar como dudosa';
+  }
 
   const optsEl = document.getElementById('exam-opts');
   optsEl.innerHTML = '';
@@ -1837,16 +2019,55 @@ function renderExamQ() {
     optsEl.appendChild(btn);
   });
 
-  const isLast = examIndex === examList.length-1;
+  const isLast = examIndex === examList.length - 1;
   document.getElementById('exam-next-btn').style.display   = isLast ? 'none' : 'flex';
+  document.getElementById('exam-next-btn').textContent     = 'Siguiente →';
   document.getElementById('exam-finish-btn').style.display = isLast ? 'flex' : 'none';
   document.getElementById('exam-prev-btn').style.display   = examIndex > 0 ? 'flex' : 'none';
+
+  // Mostrar botón "pendientes" si hay sin contestar o dudosas
+  const hasPending = pending > 0 || nDubtful > 0;
+  document.getElementById('exam-pending-wrap').style.display = hasPending ? 'flex' : 'none';
 }
 
-function examNav(dir) { examIndex = Math.max(0,Math.min(examList.length-1,examIndex+dir)); renderExamQ(); }
+function examNav(dir) {
+  // Navegación circular: del último va al primero
+  const next = examIndex + dir;
+  if (next >= examList.length) {
+    examIndex = 0;
+  } else if (next < 0) {
+    examIndex = examList.length - 1;
+  } else {
+    examIndex = next;
+  }
+  renderExamQ();
+}
+
+function toggleExamDoubtful() {
+  if (examDoubtful.has(examIndex)) {
+    examDoubtful.delete(examIndex);
+  } else {
+    examDoubtful.add(examIndex);
+  }
+  renderExamQ();
+}
+
+function examNavPending() {
+  // Busca la siguiente sin contestar O marcada como dudosa, empezando desde la posición actual+1
+  const total = examList.length;
+  for (let i = 1; i <= total; i++) {
+    const idx = (examIndex + i) % total;
+    if (!examAnswers[idx] || examDoubtful.has(idx)) {
+      examIndex = idx;
+      renderExamQ();
+      return;
+    }
+  }
+}
 
 function confirmLeaveExam() {
-  if (!Object.keys(examAnswers).length || confirm('¿Salir? Perderás el examen.')) goHome();
+  if (!Object.keys(examAnswers).length) { goHome(); return; }
+  document.getElementById('leave-exam-modal').style.display = 'flex';
 }
 
 function finishExam() {

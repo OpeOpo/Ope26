@@ -21,18 +21,18 @@
 
   /* ── MODO NOCTURNO (defecto) ── */
   :root {
-    --bg:       #0f0f14;
-    --surface:  #22222e;
-    --surface2: #2a2a3a;
-    --border:   #36364a;
-    --accent:   #261768;
-    --accent2:  #4a3faa;
-    --accent-glow: rgba(38,23,104,0.45);
-    --green:    #22c55e;
-    --red:      #ef4444;
-    --yellow:   #f59e0b;
-    --text:     #e8e8f0;
-    --muted:    #6b6b85;
+    --bg:       #0d1240;
+    --surface:  #1a2260;
+    --surface2: #232d78;
+    --border:   #3040a0;
+    --accent:   #ffffff;
+    --accent2:  #c8d0ff;
+    --accent-glow: rgba(255,255,255,0.15);
+    --green:    #4ade80;
+    --red:      #f87171;
+    --yellow:   #fbbf24;
+    --text:     #ffffff;
+    --muted:    #8fa0cc;
     --radius:   14px;
     --mono:     'Space Mono', monospace;
     --sans:     'Sora', sans-serif;
@@ -41,17 +41,17 @@
   /* ── MODO DIURNO ── */
   body.light {
     --bg:       #ffffff;
-    --surface:  #f0f0f0;
-    --surface2: #e2e2e2;
-    --border:   #cccccc;
+    --surface:  #eef0ff;
+    --surface2: #dde0ff;
+    --border:   #b0b8ee;
     --accent:   #261768;
     --accent2:  #4a3faa;
     --accent-glow: rgba(38,23,104,0.2);
     --green:    #16a34a;
     --red:      #dc2626;
     --yellow:   #d97706;
-    --text:     #1a1a2e;
-    --muted:    #6b7280;
+    --text:     #261768;
+    --muted:    #5560a0;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -130,9 +130,10 @@
   .menu-btn .info strong { display: block; font-size: 0.95rem; font-weight: 600; }
   .menu-btn .info span   { font-size: 0.78rem; color: var(--muted); margin-top: 2px; display: block; }
   .menu-btn .arrow { color: var(--muted); font-size: 1rem; }
-  .menu-btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .menu-btn.accent { background: var(--accent); border-color: var(--accent); color: var(--bg); }
   .menu-btn.accent .info span { color: rgba(255,255,255,0.75); }
-  .menu-btn.accent .arrow     { color: rgba(255,255,255,0.6); }
+  body.light .menu-btn.accent .info span { color: rgba(255,255,255,0.8); }
+  .menu-btn.accent .arrow     { color: rgba(13,18,64,0.6); }
 
   /* SELECTOR */
   #selector { overflow-y: auto; }
@@ -148,7 +149,7 @@
     cursor: pointer; border: none; background: transparent; color: var(--muted);
     font-family: var(--sans); transition: all 0.15s;
   }
-  .order-btn.active { background: var(--accent); color: #fff; }
+  .order-btn.active { background: var(--accent); color: var(--bg); }
 
   .block-btn {
     background: var(--surface); border: 1px solid var(--border);
@@ -222,14 +223,17 @@
   }
   body.light .q-num { background: #ffffff; border-color: var(--accent); color: var(--accent); }
   body.light .opt-label { background: #ffffff; border-color: var(--accent); color: var(--accent); }
+  /* En modo oscuro azul: q-num y opt-label con fondo azul oscuro y borde/texto blanco */
+  body:not(.light) .q-num { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
+  body:not(.light) .opt-label { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
   .opt-btn.correct            { background: rgba(34,197,94,0.12); border-color: var(--green); }
   .opt-btn.correct .opt-label { background: var(--green); color: #fff; }
   .opt-btn.wrong              { background: rgba(239,68,68,0.10); border-color: var(--red); }
   .opt-btn.wrong .opt-label   { background: var(--red); color: #fff; }
   .opt-btn.doubtful            { background: rgba(245,158,11,0.10); border-color: var(--yellow); }
   .opt-btn.doubtful .opt-label { background: var(--yellow); color: #000; }
-  .opt-btn.selected-exam            { background: rgba(38,23,104,0.1); border-color: var(--accent); }
-  .opt-btn.selected-exam .opt-label { background: var(--accent); color: #fff; }
+  .opt-btn.selected-exam            { background: rgba(255,255,255,0.15); border-color: var(--accent); }
+  .opt-btn.selected-exam .opt-label { background: var(--accent); color: var(--bg); }
 
   .feedback-box { margin: 12px 20px 0; padding: 14px 16px; border-radius: var(--radius); font-size: 0.85rem; line-height: 1.5; animation: fadeIn 0.25s ease; }
   .feedback-box.ok { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: var(--green); }
@@ -242,7 +246,7 @@
     transition: background 0.25s, border-color 0.25s;
   }
   .btn-primary {
-    flex: 1; background: var(--accent); color: #fff; border: none;
+    flex: 1; background: var(--accent); color: var(--bg); border: none;
     border-radius: var(--radius); padding: 15px; font-size: 0.95rem;
     font-weight: 600; cursor: pointer; font-family: var(--sans); transition: opacity 0.15s;
   }
@@ -337,7 +341,7 @@
       <p id="home-subtitle">Cargando...</p>
     </div>
     <div class="menu-grid">
-      <button class="menu-btn accent" onclick="openSelector('study')">
+      <button class="menu-btn" onclick="openSelector('study')">
         <div class="icon">🎯</div>
         <div class="info"><strong>Modo Estudio</strong><span>Feedback inmediato · elige bloque</span></div>
         <div class="arrow">›</div>
@@ -469,7 +473,7 @@
                  border-radius:8px;padding:6px 8px;font-size:0.8rem;font-family:var(--sans)"
         >
         <button onclick="goToQuestion()"
-          style="background:var(--accent);border:none;color:#fff;
+          style="background:var(--accent);border:none;color:var(--bg);
                  border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;white-space:nowrap;font-family:var(--sans);font-weight:600">
           Ir a
         </button>

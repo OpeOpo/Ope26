@@ -407,8 +407,12 @@
         background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
         padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
       <div>
-        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">🎉 ¡Bloque completado!</div>
-        <p id="block-complete-desc" style="font-size:0.88rem;line-height:1.6;color:var(--muted)"></p>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:16px">🎉 ¡Bloque completado!</div>
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px">
+          <span id="block-complete-score" style="font-family:var(--mono);font-size:2rem;font-weight:700"></span>
+          <span id="block-complete-vueltas" style="font-size:0.82rem;color:var(--muted)"></span>
+        </div>
+        <p id="block-complete-desc" style="font-size:0.83rem;line-height:1.6;color:var(--muted)"></p>
       </div>
       <button onclick="blockCompleteReset()" class="btn-primary">🔄 Borrar y reiniciar</button>
       <button onclick="blockCompleteKeep()"
@@ -525,17 +529,24 @@
     <div class="header">
       <button class="btn-back" onclick="goHome()">←</button>
       <h2 id="study-title">Modo Estudio</h2>
-      <div style="display:flex;align-items:center;gap:6px">
-        <input id="goto-input" type="number" min="1" placeholder="nº pregunta"
-          style="width:100px;background:var(--surface2);border:1px solid var(--border);color:var(--text);
-                 border-radius:8px;padding:6px 8px;font-size:0.8rem;font-family:var(--sans)"
-        >
-        <button onclick="goToQuestion()"
-          style="background:var(--accent);border:none;color:var(--bg);
-                 border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;white-space:nowrap;font-family:var(--sans);font-weight:600">
-          Ir a
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <input id="goto-input" type="number" min="1" placeholder="nº pregunta"
+            style="width:100px;background:var(--surface2);border:1px solid var(--border);color:var(--text);
+                   border-radius:8px;padding:6px 8px;font-size:0.8rem;font-family:var(--sans)"
+          >
+          <button onclick="goToQuestion()"
+            style="background:var(--accent);border:none;color:var(--bg);
+                   border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;white-space:nowrap;font-family:var(--sans);font-weight:600">
+            Ir a
+          </button>
+          <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-study">☀️</button>
+        </div>
+        <button onclick="resetBlock()"
+          style="background:transparent;border:none;color:var(--muted);font-size:0.7rem;
+                 font-family:var(--sans);cursor:pointer;text-decoration:underline;padding:0 2px">
+          🔄 Reiniciar bloque
         </button>
-        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-study">☀️</button>
       </div>
     </div>
     <div class="progress-bar-wrap">
@@ -557,13 +568,6 @@
     <div class="nav-btns">
       <button class="btn-secondary" id="study-prev-btn" onclick="studyPrev()" style="display:none">← Ant</button>
       <button class="btn-primary"   id="study-next-btn" onclick="studyNext()" disabled>Siguiente →</button>
-    </div>
-    <div style="padding:10px 20px 0;display:flex;justify-content:center">
-      <button onclick="resetBlock()"
-        style="background:transparent;border:none;color:var(--muted);font-size:0.75rem;
-               font-family:var(--sans);cursor:pointer;text-decoration:underline;padding:4px">
-        🔄 Reiniciar bloque
-      </button>
     </div>
   </div>
 
@@ -843,7 +847,7 @@ const PREGUNTAS = [
   { id:160, categoria:"fisio", pregunta:"La escala de Lawton se utiliza para:", opciones:["Las AVD.","Las AIVD.","Las AVDA.","Las AIVDA."], correcta:"b", estado:null },
   { id:161, categoria:"fisio", pregunta:"Tras una artroplastia total de rodilla, es CIERTO que:", opciones:["Se ha de colocar una almohada bajo la rodilla intervenida.","Los ruidos articulares son una complicación postoperatoria.","En sedestación prolongada, hay que mantener siempre la rodilla con una flexión tolerable.","Se ha de evaluar la capacidad de deambulación."], correcta:"d", estado:null },
   { id:162, categoria:"fisio", pregunta:"Para la evaluación cuantitativa de la marcha, se pueden usar las siguientes medidas de resultado:", opciones:["Test up and go cronometrado.","Test de Romberg.","Test de alcance funcional.","Prueba de la marcha ciega o Babinsky-Weil."], correcta:"a", estado:null },
-  { id:163, categoria:"fisio", pregunta:"Con relación a las prótesis para personas con amputación por debajo de la rodilla, señale la respuesta CORRECTA:", opciones:["El encaje PTB se apoya en el tendón rotuliano y deltoides.","El encaje KBM cubre la rótula.","El encaje CAT-CAM permite la movilidad completa de la rodilla.","El encaje PTS es como el encaje KBM pero modificado ides."], correcta:"c", estado:null },
+  { id:163, categoria:"fisio", pregunta:"Con relación a las prótesis para personas con amputación por debajo de la rodilla, señale la respuesta CORRECTA:", opciones:["El encaje PTB se apoya en el tendón rotuliano y deltoides.","El encaje KBM cubre la rótula.","El encaje CAT-CAM permite la movilidad completa de la rodilla.","El encaje PTS es como el encaje KBM pero modificado ides."], correcta:"a", estado:"impugnada" },
   { id:164, categoria:"fisio", pregunta:"Señale la opción correcta con relación al pie Sach utilizado en algunas prótesis de extremidad inferior:", opciones:["Es un pie articulado.","Tiene amortiguación en talón y antepié.","Es acumulador de energía.","Es el más usado en deportistas."], correcta:"b", estado:null },
   { id:165, categoria:"fisio", pregunta:"Con relación a las órtesis usadas en el tratamiento ortopédico de las escoliosis y cifosis estructurales, señale la FALSA:", opciones:["Corsé de Milwaukee.","Minervas.","Corsé de Lyones o Stagnara.","Corsé de Michel."], correcta:"b", estado:null },
   { id:166, categoria:"fisio", pregunta:"Señale la afirmación verdadera con relación a las indicaciones de una órtesis cervical:", opciones:["Tortícolis.","Protección postoperatoria.","Traumatismos.","Todas las anteriores son ciertas."], correcta:"d", estado:null },
@@ -1589,27 +1593,27 @@ function renderBlocksList() {
     function progressLabel(qs) {
       const { done, total } = blockProgress(qs);
       const stats = data.blockStats[blockKey(qs)];
-      if (stats && stats.completions > 0) {
-        // Bloque ya completado al menos una vez: mostrar aciertos último intento + vueltas
+      if (done === total && stats && stats.completions > 0) {
+        // Recién completado: mostrar aciertos del intento recién guardado
         const aciertos = Math.round(stats.lastPct * total / 100);
         const vueltasStr = stats.completions === 1 ? '1 vuelta' : `${stats.completions} vueltas`;
-        if (done > 0) {
-          // Intento en curso
-          return `${done}/${total}`;
-        }
         return `✓ ${aciertos}/${total} · ${vueltasStr}`;
       }
-      // Nunca completado: mostrar progreso actual
+      if (stats && stats.completions > 0 && done === 0) {
+        // Completado anteriormente, nuevo intento no empezado
+        const aciertos = Math.round(stats.lastPct * total / 100);
+        const vueltasStr = stats.completions === 1 ? '1 vuelta' : `${stats.completions} vueltas`;
+        return `✓ ${aciertos}/${total} · ${vueltasStr}`;
+      }
+      // En progreso o sin empezar
       return `${done}/${total}`;
     }
 
     function progressColor(qs) {
       const { done, total } = blockProgress(qs);
       const stats = data.blockStats[blockKey(qs)];
-      if (done > 0 && done < total) return 'var(--accent2)';  // en progreso
-      if (done === total) return 'var(--accent2)';             // completado ahora (no verde para no confundir)
+      if (done > 0 && done < total) return 'var(--accent2)';
       if (stats && stats.completions > 0) {
-        // Color según % acierto del último intento
         if (stats.lastPct >= 70) return 'var(--green)';
         if (stats.lastPct >= 40) return 'var(--yellow)';
         return 'var(--red)';
@@ -1819,13 +1823,14 @@ function renderStudyQ() {
 
     fb.style.display = 'block';
     if (impugnada) {
-      fb.className = 'feedback-box';
-      fb.style.background = 'rgba(239,68,68,0.08)';
-      fb.style.border = '1px solid rgba(239,68,68,0.2)';
-      const resultTxt = correct
-        ? `✅ Correcto según la clave sindical.`
-        : `❌ Incorrecto. Clave sindical: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong>`;
-      fb.innerHTML = `🚫 <strong>Pregunta impugnada.</strong> Puede no contar en la puntuación final. ${resultTxt}`;
+      fb.style.border = '';
+      if (correct) {
+        fb.className = 'feedback-box ok';
+        fb.innerHTML = `🚫 <strong>Impugnada · Correcto</strong> según la clave sindical. Puede no contar en la puntuación final.`;
+      } else {
+        fb.className = 'feedback-box ko';
+        fb.innerHTML = `🚫 <strong>Impugnada · Incorrecto.</strong> Clave sindical: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong> · Puede no contar en la puntuación final.`;
+      }
     } else if (dudosa) {
       fb.className = 'feedback-box';
       fb.style.background = 'rgba(245,158,11,0.1)';
@@ -1868,8 +1873,11 @@ function selectStudyAnswer(key, q) {
   if (hasAnswer) {
     if (correct) {
       data.streaks[q.id] = (data.streaks[q.id]||0)+1;
-      const di = data.difficult.indexOf(q.id);
-      if (di !== -1) data.difficult.splice(di,1);
+      // Quitar de difíciles solo si lleva 5 aciertos consecutivos
+      if (data.streaks[q.id] >= 5) {
+        const di = data.difficult.indexOf(q.id);
+        if (di !== -1) data.difficult.splice(di,1);
+      }
       if (data.streaks[q.id] >= 10 && !data.mastered.includes(q.id)) data.mastered.push(q.id);
     } else {
       data.streaks[q.id] = 0;
@@ -1901,13 +1909,14 @@ function selectStudyAnswer(key, q) {
   fb.style.background = '';
 
   if (impugnada) {
-    fb.className = 'feedback-box';
-    fb.style.background = 'rgba(239,68,68,0.08)';
-    fb.style.border = '1px solid rgba(239,68,68,0.2)';
-    const resultTxt = correct
-      ? `✅ Correcto según la clave sindical.`
-      : `❌ Incorrecto. Clave sindical: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong>`;
-    fb.innerHTML = `🚫 <strong>Pregunta impugnada.</strong> Puede no contar en la puntuación final. ${resultTxt}`;
+    fb.style.border = '';
+    if (correct) {
+      fb.className = 'feedback-box ok';
+      fb.innerHTML = `🚫 <strong>Impugnada · Correcto</strong> según la clave sindical. Puede no contar en la puntuación final.`;
+    } else {
+      fb.className = 'feedback-box ko';
+      fb.innerHTML = `🚫 <strong>Impugnada · Incorrecto.</strong> Clave sindical: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong> · Puede no contar en la puntuación final.`;
+    }
   } else if (dudosa) {
     fb.className = 'feedback-box';
     fb.style.background = 'rgba(245,158,11,0.1)';
@@ -1949,15 +1958,20 @@ function studyNext() {
     const allDone = studyList.every(q => data.answered[q.id]);
     if (allDone) {
       const correct = studyList.filter(q => data.answered[q.id] && data.answered[q.id].correct).length;
-      const pct     = Math.round(correct / studyList.length * 100);
+      const total   = studyList.length;
+      const pct     = Math.round(correct / total * 100);
       // Guardar stats
       const key = studyList.map(q=>q.id).sort((a,b)=>a-b).join(',').slice(0,40);
       if (!data.blockStats[key]) data.blockStats[key] = { completions:0, lastPct:0 };
       data.blockStats[key].completions++;
       data.blockStats[key].lastPct = pct;
       saveData(data);
-      document.getElementById('block-complete-desc').textContent =
-        `Has respondido todas las preguntas del bloque con un ${pct}% de acierto. ¿Qué quieres hacer?`;
+      const vueltas = data.blockStats[key].completions;
+      const scoreColor = pct >= 70 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--red)';
+      document.getElementById('block-complete-score').textContent = `${correct}/${total}`;
+      document.getElementById('block-complete-score').style.color = scoreColor;
+      document.getElementById('block-complete-vueltas').textContent = `Vuelta ${vueltas} · ${pct}% acierto`;
+      document.getElementById('block-complete-desc').textContent = '¿Qué quieres hacer?';
       document.getElementById('block-complete-modal').style.display = 'flex';
     }
   }

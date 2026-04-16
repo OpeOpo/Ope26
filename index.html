@@ -1810,6 +1810,8 @@ function renderStudyQ() {
     document.querySelectorAll('#study-opts .opt-btn').forEach((btn,i) => {
       btn.disabled = true;
       if (impugnada) {
+        if (keys[i] === q.correcta) btn.classList.add('correct');
+        else if (keys[i] === key && !correct) btn.classList.add('wrong');
       } else if (dudosa && keys[i] === q.correcta) {
         btn.classList.add('doubtful');
       } else if (!dudosa && hasAnswer && keys[i] === q.correcta) {
@@ -1826,10 +1828,10 @@ function renderStudyQ() {
       fb.style.border = '';
       if (correct) {
         fb.className = 'feedback-box ok';
-        fb.innerHTML = `🚫 <strong>Impugnada · Correcto</strong> según la clave sindical. Puede no contar en la puntuación final.`;
+        fb.innerHTML = `✅ <strong>¡Correcto!</strong> · <span style="opacity:0.8">🚫 Pregunta impugnada — puede no contar en el examen oficial.</span>`;
       } else {
         fb.className = 'feedback-box ko';
-        fb.innerHTML = `🚫 <strong>Impugnada · Incorrecto.</strong> Clave sindical: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong> · Puede no contar en la puntuación final.`;
+        fb.innerHTML = `❌ <strong>Incorrecto.</strong> Correcta: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong> · <span style="opacity:0.8">🚫 Impugnada — puede no contar en el examen oficial.</span>`;
       }
     } else if (dudosa) {
       fb.className = 'feedback-box';
@@ -1855,6 +1857,14 @@ function renderStudyQ() {
     }
   } else {
     document.getElementById('study-next-btn').disabled = true;
+    // Mostrar aviso de impugnada antes de contestar
+    if ((q.estado || null) === 'impugnada') {
+      fb.style.display = 'block';
+      fb.className = 'feedback-box';
+      fb.style.background = 'rgba(239,68,68,0.08)';
+      fb.style.border = '1px solid rgba(239,68,68,0.2)';
+      fb.innerHTML = `🚫 <strong>Pregunta impugnada.</strong> Puede no contar en la puntuación final del examen oficial.`;
+    }
   }
 }
 
@@ -1889,14 +1899,12 @@ function selectStudyAnswer(key, q) {
   const keys = ['a','b','c','d'];
   document.querySelectorAll('#study-opts .opt-btn').forEach((btn,i) => {
     btn.disabled = true;
-    if (impugnada) {
-      // Ninguna se marca, todas en gris
-    } else if (dudosa && keys[i] === q.correcta) {
-      btn.classList.add('doubtful');           // amarillo
-    } else if (!dudosa && hasAnswer && keys[i] === q.correcta) {
-      btn.classList.add('correct');            // verde
+    if (dudosa && keys[i] === q.correcta) {
+      btn.classList.add('doubtful');
+    } else if (hasAnswer && keys[i] === q.correcta) {
+      btn.classList.add('correct');
     } else if (hasAnswer && keys[i] === key && !correct) {
-      btn.classList.add('wrong');              // rojo
+      btn.classList.add('wrong');
     } else if (!hasAnswer && keys[i] === key) {
       btn.classList.add('selected-exam');
     }
@@ -1912,10 +1920,10 @@ function selectStudyAnswer(key, q) {
     fb.style.border = '';
     if (correct) {
       fb.className = 'feedback-box ok';
-      fb.innerHTML = `🚫 <strong>Impugnada · Correcto</strong> según la clave sindical. Puede no contar en la puntuación final.`;
+      fb.innerHTML = `✅ <strong>¡Correcto!</strong> · <span style="opacity:0.8">🚫 Pregunta impugnada — puede no contar en el examen oficial.</span>`;
     } else {
       fb.className = 'feedback-box ko';
-      fb.innerHTML = `🚫 <strong>Impugnada · Incorrecto.</strong> Clave sindical: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong> · Puede no contar en la puntuación final.`;
+      fb.innerHTML = `❌ <strong>Incorrecto.</strong> Correcta: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong> · <span style="opacity:0.8">🚫 Impugnada — puede no contar en el examen oficial.</span>`;
     }
   } else if (dudosa) {
     fb.className = 'feedback-box';
@@ -1962,9 +1970,11 @@ function studyNext() {
       const pct     = Math.round(correct / total * 100);
       // Guardar stats
       const key = studyList.map(q=>q.id).sort((a,b)=>a-b).join(',').slice(0,40);
-      if (!data.blockStats[key]) data.blockStats[key] = { completions:0, lastPct:0 };
+      if (!data.blockStats[key]) data.blockStats[key] = { completions:0, lastPct:0, history:[] };
+      if (!data.blockStats[key].history) data.blockStats[key].history = [];
       data.blockStats[key].completions++;
       data.blockStats[key].lastPct = pct;
+      data.blockStats[key].history.push({ pct: pct, date: Date.now() });
       saveData(data);
       const vueltas = data.blockStats[key].completions;
       const scoreColor = pct >= 70 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--red)';
@@ -2186,39 +2196,61 @@ function renderStats() {
       <div style="display:flex;flex-direction:column;gap:8px">`;
 
   // Fisio
-  html += `<div style="font-size:0.75rem;color:var(--accent2);font-family:var(--mono);padding:2px 0">🖐️ FISIOTERAPIA</div>`;
+  html += '<div style="font-size:0.75rem;color:var(--accent2);font-family:var(--mono);padding:2px 0">🖐️ FISIOTERAPIA</div>';
   getBlocks().filter(b => b.categoria === 'fisio').forEach(b => {
     const bk    = blockKey(b.questions);
-    const stats = data.blockStats[bk] || { completions:0, lastPct:null };
+    const stats = data.blockStats[bk] || { completions:0, lastPct:null, history:[] };
+    const hist  = stats.history || [];
     const color = stats.lastPct !== null
       ? (stats.lastPct >= 70 ? 'var(--green)' : stats.lastPct >= 40 ? 'var(--yellow)' : 'var(--red)')
       : 'var(--muted)';
-    html += `
-      <div class="bloque-row">
-        <div class="b-name">${b.label}<br><span style="font-size:0.72rem;color:var(--muted)">${b.range}</span></div>
-        <div style="text-align:right;min-width:90px">
-          <div style="font-size:0.78rem;color:var(--muted)">${stats.completions} vuelta${stats.completions !== 1 ? 's' : ''}</div>
-          <div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:${color}">${stats.lastPct !== null ? stats.lastPct+'%' : '—'}</div>
-        </div>
-      </div>`;
+    let histRow = '';
+    if (hist.length > 1) {
+      const items = hist.map(function(h) {
+        const c = h.pct >= 70 ? 'var(--green)' : h.pct >= 40 ? 'var(--yellow)' : 'var(--red)';
+        const d = new Date(h.date).toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'});
+        return '<span style="color:' + c + ';font-family:var(--mono)">' + d + ': ' + h.pct + '%</span>';
+      });
+      histRow = '<div style="font-size:0.72rem;color:var(--muted);line-height:1.8;margin-top:4px">' + items.join(' · ') + '</div>';
+    }
+    html += '<div class="bloque-row" style="flex-direction:column;align-items:flex-start;gap:4px">'
+      + '<div style="display:flex;width:100%;justify-content:space-between;align-items:center">'
+      + '<div class="b-name">' + b.label + '<br><span style="font-size:0.72rem;color:var(--muted)">' + b.range + '</span></div>'
+      + '<div style="text-align:right;min-width:90px">'
+      + '<div style="font-size:0.78rem;color:var(--muted)">' + stats.completions + ' vuelta' + (stats.completions !== 1 ? 's' : '') + '</div>'
+      + '<div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:' + color + '">' + (stats.lastPct !== null ? stats.lastPct + '%' : '—') + '</div>'
+      + '</div></div>'
+      + histRow
+      + '</div>';
   });
 
   // General
-  html += `<div style="font-size:0.75rem;color:var(--accent2);font-family:var(--mono);padding:6px 0 2px">📋 TEMARIO GENERAL</div>`;
+  html += '<div style="font-size:0.75rem;color:var(--accent2);font-family:var(--mono);padding:6px 0 2px">📋 TEMARIO GENERAL</div>';
   getBlocks().filter(b => b.categoria === 'general').forEach(b => {
     const bk    = blockKey(b.questions);
-    const stats = data.blockStats[bk] || { completions:0, lastPct:null };
+    const stats = data.blockStats[bk] || { completions:0, lastPct:null, history:[] };
+    const hist  = stats.history || [];
     const color = stats.lastPct !== null
       ? (stats.lastPct >= 70 ? 'var(--green)' : stats.lastPct >= 40 ? 'var(--yellow)' : 'var(--red)')
       : 'var(--muted)';
-    html += `
-      <div class="bloque-row">
-        <div class="b-name">${b.label}<br><span style="font-size:0.72rem;color:var(--muted)">${b.range}</span></div>
-        <div style="text-align:right;min-width:90px">
-          <div style="font-size:0.78rem;color:var(--muted)">${stats.completions} vuelta${stats.completions !== 1 ? 's' : ''}</div>
-          <div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:${color}">${stats.lastPct !== null ? stats.lastPct+'%' : '—'}</div>
-        </div>
-      </div>`;
+    let histRow = '';
+    if (hist.length > 1) {
+      const items = hist.map(function(h) {
+        const c = h.pct >= 70 ? 'var(--green)' : h.pct >= 40 ? 'var(--yellow)' : 'var(--red)';
+        const d = new Date(h.date).toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'});
+        return '<span style="color:' + c + ';font-family:var(--mono)">' + d + ': ' + h.pct + '%</span>';
+      });
+      histRow = '<div style="font-size:0.72rem;color:var(--muted);line-height:1.8;margin-top:4px">' + items.join(' · ') + '</div>';
+    }
+    html += '<div class="bloque-row" style="flex-direction:column;align-items:flex-start;gap:4px">'
+      + '<div style="display:flex;width:100%;justify-content:space-between;align-items:center">'
+      + '<div class="b-name">' + b.label + '<br><span style="font-size:0.72rem;color:var(--muted)">' + b.range + '</span></div>'
+      + '<div style="text-align:right;min-width:90px">'
+      + '<div style="font-size:0.78rem;color:var(--muted)">' + stats.completions + ' vuelta' + (stats.completions !== 1 ? 's' : '') + '</div>'
+      + '<div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:' + color + '">' + (stats.lastPct !== null ? stats.lastPct + '%' : '—') + '</div>'
+      + '</div></div>'
+      + histRow
+      + '</div>';
   });
 
   html += `</div></div>`;

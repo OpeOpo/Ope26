@@ -362,7 +362,7 @@
     </div>
     <!-- Texto actualización centrado -->
     <div style="position:absolute;bottom:70px;left:0;right:0;text-align:center;pointer-events:none">
-      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 22/04</span>
+      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 23/04</span>
     </div>
     <!-- Botón estadísticas pequeño abajo derecha -->
     <div style="position:absolute;bottom:24px;right:20px">
@@ -371,6 +371,34 @@
                border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;
                display:flex;align-items:center;gap:5px;font-family:var(--sans)">
         📊 Estadísticas
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL REINICIAR BLOQUE -->
+  <div id="reset-block-modal" style="
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:24px">
+    <div style="
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">🔄 ¿Reiniciar bloque?</div>
+        <p style="font-size:0.88rem;line-height:1.6;color:var(--muted)">
+          Se borrará el progreso de todas las preguntas de este bloque. Esta acción no se puede deshacer.
+        </p>
+      </div>
+      <button onclick="confirmResetBlock()"
+        style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        Sí, reiniciar
+      </button>
+      <button onclick="document.getElementById('reset-block-modal').style.display='none'"
+        style="background:transparent;border:1px solid var(--border);color:var(--text);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        Cancelar
       </button>
     </div>
   </div>
@@ -548,7 +576,7 @@
         </div>
         <button onclick="resetBlock()"
           style="background:transparent;border:none;color:var(--muted);font-size:0.7rem;
-                 font-family:var(--sans);cursor:pointer;text-decoration:underline;padding:0 2px">
+                 font-family:var(--sans);cursor:pointer;text-decoration:underline;padding:10px 2px 0">
           🔄 Reiniciar bloque
         </button>
       </div>
@@ -572,6 +600,9 @@
     <div class="nav-btns">
       <button class="btn-secondary" id="study-prev-btn" onclick="studyPrev()" style="display:none">← Ant</button>
       <button class="btn-primary"   id="study-next-btn" onclick="studyNext()" disabled>Siguiente →</button>
+    </div>
+    <div id="study-all-notice" style="display:none;padding:10px 20px 0;text-align:center">
+      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">ℹ️ En este bloque el temario común empieza en la posición 501</span>
     </div>
   </div>
 
@@ -851,7 +882,7 @@ const PREGUNTAS = [
   { id:160, categoria:"fisio", pregunta:"La escala de Lawton se utiliza para:", opciones:["Las AVD.","Las AIVD.","Las AVDA.","Las AIVDA."], correcta:"b", estado:null },
   { id:161, categoria:"fisio", pregunta:"Tras una artroplastia total de rodilla, es CIERTO que:", opciones:["Se ha de colocar una almohada bajo la rodilla intervenida.","Los ruidos articulares son una complicación postoperatoria.","En sedestación prolongada, hay que mantener siempre la rodilla con una flexión tolerable.","Se ha de evaluar la capacidad de deambulación."], correcta:"d", estado:null },
   { id:162, categoria:"fisio", pregunta:"Para la evaluación cuantitativa de la marcha, se pueden usar las siguientes medidas de resultado:", opciones:["Test up and go cronometrado.","Test de Romberg.","Test de alcance funcional.","Prueba de la marcha ciega o Babinsky-Weil."], correcta:"a", estado:null },
-  { id:163, categoria:"fisio", pregunta:"Con relación a las prótesis para personas con amputación por debajo de la rodilla, señale la respuesta CORRECTA:", opciones:["El encaje PTB se apoya en el tendón rotuliano y deltoides.","El encaje KBM cubre la rótula.","El encaje CAT-CAM permite la movilidad completa de la rodilla.","El encaje PTS es como el encaje KBM pero modificado ides."], correcta:"a", estado:"impugnada" },
+  { id:163, categoria:"fisio", pregunta:"Con relación a las prótesis para personas con amputación por debajo de la rodilla, señale la respuesta CORRECTA:", opciones:["El encaje PTB se apoya en el tendón rotuliano y deltoides.","El encaje KBM cubre la rótula.","El encaje CAT-CAM permite la movilidad completa de la rodilla.","El encaje PTS es como el encaje KBM pero modificado ides."], correcta:"c", estado:"impugnada" },
   { id:164, categoria:"fisio", pregunta:"Señale la opción correcta con relación al pie Sach utilizado en algunas prótesis de extremidad inferior:", opciones:["Es un pie articulado.","Tiene amortiguación en talón y antepié.","Es acumulador de energía.","Es el más usado en deportistas."], correcta:"b", estado:null },
   { id:165, categoria:"fisio", pregunta:"Con relación a las órtesis usadas en el tratamiento ortopédico de las escoliosis y cifosis estructurales, señale la FALSA:", opciones:["Corsé de Milwaukee.","Minervas.","Corsé de Lyones o Stagnara.","Corsé de Michel."], correcta:"b", estado:null },
   { id:166, categoria:"fisio", pregunta:"Señale la afirmación verdadera con relación a las indicaciones de una órtesis cervical:", opciones:["Tortícolis.","Protección postoperatoria.","Traumatismos.","Todas las anteriores son ciertas."], correcta:"d", estado:null },
@@ -1005,7 +1036,7 @@ const PREGUNTAS = [
   { id:314, categoria:"fisio", pregunta:"En ergonomía, respecto a la manipulación manual de cargas, ¿a partir de qué peso se considera un objeto como “carga”?", opciones:["5 kg.","6 kg.","3 kg.","10 kg."], correcta:"c", estado:null },
   { id:315, categoria:"fisio", pregunta:"Señale la afirmación INCORRECTA respecto a los factores de riesgo en el lugar de trabajo:", opciones:["El levantamiento de carga desde la posición de sentada no debería superar los 5 kg.","La altura de manipulación de carga debe tenerse siempre en cuenta.","De forma orientativa, no se debería empujar o arrastrar cargas de 15 kg.","Se considera movimiento repetitivo aquel con una frecuencia de al menos dos movimientos por minuto."], correcta:"c", estado:null },
   { id:316, categoria:"fisio", pregunta:"En el trabajo en sedestación, ¿cuál de las siguientes posturas se considera la más adecuada para mantener la ergonomía y prevenir molestias musculoesqueléticas?", opciones:["Postura sedente media.","Postura sedente anterior.","Postura sedente erguida.","Postura sedente flexionada."], correcta:"c", estado:null },
-  { id:317, categoria:"fisio", pregunta:"La carga entre dos personas deberá levantarse cuando se produzca alguna de estas circunstancias:", opciones:["El objeto tiene al menos dos dimensiones superiores a 60 cm.","El peso del objeto es superior a 35 kg.","El objeto tiene una forma inapropiada para ser trasladado por una persona.","a) b) y c) son correctas."], correcta:"d", estado:null },
+  { id:317, categoria:"fisio", pregunta:"La carga entre dos personas deberá levantarse cuando se produzca alguna de estas circunstancias:", opciones:["El objeto tiene al menos dos dimensiones superiores a 60 cm.","El peso del objeto es superior a 35 kg.","El objeto tiene una forma inapropiada para ser trasladado por una persona.","a) b) y c) son correctas."], correcta:"c", estado:null },
   { id:318, categoria:"fisio", pregunta:"En relación con los determinantes de la marcha, es FALSO que:", opciones:["La cintura escapular gira al mismo sentido a la cintura pelviana.","Durante la marcha, la pelvis desciende hacia el lado de la pierna oscilante.","Tras el apoyo inicial de talón, el centro de gravedad desciende en su máximo punto.","La pelvis debe desplazarse horizontalmente para mantener la estabilidad en el apoyo medio."], correcta:"a", estado:null },
   { id:319, categoria:"fisio", pregunta:"Durante la marcha, ¿qué musculatura principalmente es necesaria durante el apoyo medio?", opciones:["Los isquiotibiales.","La musculatura pretibial.","El glúteo mayor.","El grupo abductor de cadera."], correcta:"d", estado:null },
   { id:320, categoria:"fisio", pregunta:"En relación con los diferentes tipos de marcha en personas con afecciones neurológicas, señale la opción INCORRECTA:", opciones:["En la marcha cerebelosa existe un aumento de base de sustentación con tendencia a caer hacia delante.","En una marcha en tijeras la persona realiza pasos cortos cruzando las piernas al caminar.","En la marcha tabética la persona eleva exageradamente las piernas y deja caer bruscamente los pies contra el suelo.","La marcha vestibular es inestable con latero pulsión y tendencia a caer hacia el mismo lado de la lesión."], correcta:"a", estado:null },
@@ -1030,11 +1061,11 @@ const PREGUNTAS = [
   { id:339, categoria:"fisio", pregunta:"En el conflicto subacromial o impingement, señale la respuesta CORRECTA:", opciones:["Está contraindicada la realización de trabajo activo muscular sin haber logrado la recuperación completa de la amplitud articular pasiva.","El ejercicio en abducción pura, bien sea pasivo, activo o resistido, es perjudicial.","La ESWT y EPI han demostrado eficacia en el tratamiento conservador.","Todas las respuestas son correctas."], correcta:"d", estado:null },
   { id:340, categoria:"fisio", pregunta:"La Fase 3 de la capsulitis adhesiva de hombro se caracteriza por:", opciones:["Ausencia de dolor y mejora gradual de movimiento, así como por la remodelación de la cápsula articular.","Dolor y limitación moderada de la amplitud de movimiento, sinovial hipovascular e hipertrofiada.","Dolor crónico y disminución de la amplitud de movimiento, sinovial hipovascularizada y depósitos de colágeno.","Rigidez predominante, con posible presencia de dolor, y tejido de colágeno denso."], correcta:"d", estado:null },
   { id:341, categoria:"fisio", pregunta:"¿Cuál es la complicación más frecuente tras un traumatismo de codo?", opciones:["Rigidez postraumática.","Miositis osificante.","Síndrome compartimental agudo.","Pseudoartrosis."], correcta:"a", estado:null },
-  { id:342, categoria:"fisio", pregunta:"¿Cuál es la prueba en la cual la persona se sitúa con el hombro a 60º de flexión, codo extendido, antebrazo en pronación, muñeca a 30º de extensión, y se aplica una presión en el dorso del 2º a 3er metacarpiano?", opciones:["Prueba de Thomson.","Prueba de Bowden.","Prueba de Cozen.","Prueba de Phalen."], correcta:"c", estado:null },
+  { id:342, categoria:"fisio", pregunta:"¿Cuál es la prueba en la cual la persona se sitúa con el hombro a 60º de flexión, codo extendido, antebrazo en pronación, muñeca a 30º de extensión, y se aplica una presión en el dorso del 2º a 3er metacarpiano?", opciones:["Prueba de Thomson.","Prueba de Bowden.","Prueba de Cozen.","Prueba de Phalen."], correcta:"a", estado:null },
   { id:343, categoria:"fisio", pregunta:"¿Cuál es el tiempo mínimo de inmovilización en una fractura de escafoides?", opciones:["1 mes.","2 meses.","3 meses.","4 meses."], correcta:"b", estado:null },
   { id:344, categoria:"fisio", pregunta:"¿Cuál es la luxación de carpo más frecuente e invalidante?", opciones:["Luxación de la articulación radiocubital.","Luxación de la articulación trapeciometacarpiana.","Luxación de la articulación piramido-pisiforme.","Ninguna de las anteriores."], correcta:"d", estado:null },
   { id:345, categoria:"fisio", pregunta:"Durante la flexión de rodilla, el menisco interno es desplazado hacia la parte posterior por la conexión con:", opciones:["El músculo semimembranoso.","El músculo semitendinoso.","El músculo bíceps femoral.","El músculo poplíteo."], correcta:"a", estado:null },
-  { id:346, categoria:"fisio", pregunta:"Las lesiones longitudinales de menisco también se denominan:", opciones:["Lesiones verticales.","Lesiones radiales.","Lesiones en asa de cubo.","Lesiones en pico de loro."], correcta:"a", estado:null },
+  { id:346, categoria:"fisio", pregunta:"Las lesiones longitudinales de menisco también se denominan:", opciones:["Lesiones verticales.","Lesiones radiales.","Lesiones en asa de cubo.","Lesiones en pico de loro."], correcta:"c", estado:null },
   { id:347, categoria:"fisio", pregunta:"¿Qué valora el signo de Zohlen?", opciones:["Acortamiento del psoas ilíaco.","Existencia de condromalacia rotuliana.","Inestabilidad rotuliana.","Ángulo Q aumentado."], correcta:"b", estado:null },
   { id:348, categoria:"fisio", pregunta:"¿Qué valora el test de Ober?", opciones:["Acortamiento de la cintilla iliotibial.","Rotura del tendón de Aquiles.","Síndrome de De Quervain.","Acortamiento del psoas ilíaco."], correcta:"a", estado:null },
   { id:349, categoria:"fisio", pregunta:"El complejo ligamentoso lateral del tobillo está formado por:", opciones:["El ligamento peroneoastragalino anterior y posterior.","El ligamento peroneoastragalino anterior, ligamento peroneoastragalino posterior y ligamento peroneocalcáneo.","El ligamento peroneoastragalino anterior, ligamento peroneoastragalino posterior y ligamento tibioperoneo transverso.","El ligamento peroneoastragalino anterior y ligamento peroneocalcáneo."], correcta:"b", estado:null },
@@ -1132,12 +1163,12 @@ const PREGUNTAS = [
   { id:441, categoria:"fisio", pregunta:"Señale la respuesta CORRECTA con relación a la aplicación de corrientes eléctricas:", opciones:["La potencia de una corriente eléctrica se mide en voltios.","La resistencia de los cuerpos al paso de la corriente eléctrica se mide en ohmios.","La diferencia de potencial se mide en vatios.","El calor generado por una corriente eléctrica es inversamente proporcional al tiempo de exposición a dicha corriente eléctrica."], correcta:"b", estado:null },
   { id:442, categoria:"fisio", pregunta:"En la técnica de iontoforesis con ácido acético:", opciones:["El ácido acético, que tiene carga negativa, se sitúa bajo el cátodo.","El ácido acético, que tiene carga negativa, se sitúa bajo el ánodo.","El ácido acético, que tiene carga positiva, se sitúa bajo el cátodo.","El ácido acético, que tiene carga positiva, se sitúa bajo el ánodo."], correcta:"a", estado:null },
   { id:443, categoria:"fisio", pregunta:"Señale qué modalidad de corriente diadinámica puede utilizarse para respuesta motora:", opciones:["Monofásica fija.","Cortos periodos.","Largos periodos.","Ritmo sincopado."], correcta:"d", estado:null },
-  { id:444, categoria:"fisio", pregunta:"Señale cuál de las siguientes afirmaciones es CORRECTA con relación a la electroestimulación con corrientes farádicas:", opciones:["Si la frecuencia es muy alta y la intensidad es elevada se correrá el riesgo de tetanizar el músculo.","Si se aplican impulsos largos (2 o 3 ms) la respuesta nerviosa será buena.","Si se aplican impulsos cortos (0,1 a 0,5 ms) la respuesta de la fibra muscular será buena.","Los pulsos de forma cuadrangular y monofásicos generan menos respuesta que los triangulares monofásicos."], correcta:"c", estado:null },
+  { id:444, categoria:"fisio", pregunta:"Señale cuál de las siguientes afirmaciones es CORRECTA con relación a la electroestimulación con corrientes farádicas:", opciones:["Si la frecuencia es muy alta y la intensidad es elevada se correrá el riesgo de tetanizar el músculo.","Si se aplican impulsos largos (2 o 3 ms) la respuesta nerviosa será buena.","Si se aplican impulsos cortos (0,1 a 0,5 ms) la respuesta de la fibra muscular será buena.","Los pulsos de forma cuadrangular y monofásicos generan menos respuesta que los triangulares monofásicos."], correcta:"a", estado:null },
   { id:445, categoria:"fisio", pregunta:"Señale cuál de las siguientes afirmaciones es INCORRECTA respecto a las curvas I/T-A/T:", opciones:["La reobase es la intensidad mínima necesaria para que se inicie la contracción con un impulso cuadrangular de 1000 ms.","El umbral gálvano tétano es la intensidad mínima necesaria para producir una contracción muscular con un impulso de subida progresiva de 1000 ms.","La cronaxia es el tiempo que está determinado por la respuesta umbral con la mitad del valor de la reobase.","El cociente de acomodación en la curva A/T entre 2 y 3 representa una pérdida parcial de la acomodación."], correcta:"c", estado:null },
   { id:446, categoria:"fisio", pregunta:"En el caso de una denervación grave, al realizar el estudio de las curvas I/T- A/T, observamos que están desplazadas hacia:", opciones:["La derecha y arriba.","La derecha y abajo.","La izquierda y arriba.","La izquierda y abajo."], correcta:"a", estado:null },
   { id:447, categoria:"fisio", pregunta:"Señale la afirmación INCORRECTA sobre la estimulación eléctrica transcutánea (TENS):", opciones:["Técnica no invasiva de electroterapia que emplea corriente alterna de baja frecuencia.","Ejerce sus efectos de control del dolor mediante los mecanismos de control de compuerta y estimulación de liberación de opiáceos endógenos.","Destaca su utilidad para introducir sustancias en el organismo a través de la piel.","La modalidad de baja frecuencia de 2 a 5 Hz, es la utilizada en electroacupuntura."], correcta:"c", estado:null },
   { id:448, categoria:"fisio", pregunta:"¿Qué se entiende por periodo de una corriente eléctrica?", opciones:["Es el tiempo total de aplicación de la corriente.","Es el tiempo que dura un ciclo completo.","Es el tiempo que tarda la corriente en alcanzar su máxima amplitud.","Es el número de veces que se repite el ciclo completo de corriente en un segundo."], correcta:"b", estado:null },
-  { id:449, categoria:"fisio", pregunta:"Señale la respuesta CORRECTA con relación a la aplicación de magnetoterapia con un solenoide cilíndrico:", opciones:["El miembro a tratar se colocará en el centro, equidistante a toda la pared del solenoide.","El miembro a tratar se introducirá en el solenoide lo más próximo posible a la pared del mismo.","Es indiferente la posición del miembro a tratar respecto del solenoide puesto que el campo magnético es perfectamente homogéneo.","El miembro a tratar se colocará apoyado sobre el exterior del solenoide."], correcta:"a", estado:null },
+  { id:449, categoria:"fisio", pregunta:"Señale la respuesta CORRECTA con relación a la aplicación de magnetoterapia con un solenoide cilíndrico:", opciones:["El miembro a tratar se colocará en el centro, equidistante a toda la pared del solenoide.","El miembro a tratar se introducirá en el solenoide lo más próximo posible a la pared del mismo.","Es indiferente la posición del miembro a tratar respecto del solenoide puesto que el campo magnético es perfectamente homogéneo.","El miembro a tratar se colocará apoyado sobre el exterior del solenoide."], correcta:"b", estado:null },
   { id:450, categoria:"fisio", pregunta:"¿Cuál de las siguientes unidades mide la intensidad de un campo magnético?", opciones:["Tesla.","Amperio.","Gauss.","a) y c) son correctas."], correcta:"d", estado:null },
   { id:451, categoria:"fisio", pregunta:"En la aplicación de onda corta, la colocación de placas en campo condensador puede realizarse de forma:", opciones:["Coplanar.","Contralateral.","Longitudinal.","Todas son correctas."], correcta:"d", estado:null },
   { id:452, categoria:"fisio", pregunta:"En la dosificación de las corrientes de alta frecuencia el Grado III corresponde a:", opciones:["Calor suave, ligeramente perceptible. Es supraliminal pero con leve sensación térmica.","Calor intenso, fuertemente perceptible. Puede llegar a rozar el umbral del dolor, sobre todo después de cierto tiempo.","Calor moderado, claramente perceptible. La sensación de calor está bien definida, pero es agradable.","Calor quemante, percepción de quemadura. El calor se vuelve doloroso."], correcta:"c", estado:null },
@@ -1182,7 +1213,7 @@ const PREGUNTAS = [
   { id:491, categoria:"fisio", pregunta:"¿Cuál de estas escalas NO se utiliza para identificar la fragilidad y el riesgo de peores resultados clínicos durante la rehabilitación cardíaca?", opciones:["Escala de Frail.","Short Physical Performance Battery.","Escala tipo A de Framingham.","Fenotipo de Fried."], correcta:"c", estado:null },
   { id:492, categoria:"fisio", pregunta:"Señale las consecuencias de un estilo de vida sedentario en el organismo:", opciones:["Obesidad.","Osteoporosis.","Enfermedades musculoesqueléticas.","Todas son consecuencias de un estilo de vida sedentario."], correcta:"d", estado:null },
   { id:493, categoria:"fisio", pregunta:"Señale la respuesta INCORRECTA respecto a la enfermedad arterial periférica:", opciones:["Tiene un riesgo cardiovascular bajo.","Su rehabilitación incluye un programa preventivo de hábitos de vida saludables.","Su rehabilitación incluye incorporar un programa de ejercicio físico.","Su rehabilitación incluye incorporar un programa de control de factores de riesgo cardiovascular."], correcta:"a", estado:null },
-  { id:494, categoria:"fisio", pregunta:"Señale los beneficios de un programa rehabilitación cardiorrespiratoria que incluya entrenamiento aeróbico y de fuerza:", opciones:["Aumento de la densidad ósea.","Aumento de los niveles de marcadores inflamatorios.","Aumento de la densidad capilar.","Reducción de la resistencia a la insulina."], correcta:"b", estado:null },
+  { id:494, categoria:"fisio", pregunta:"Señale los beneficios de un programa rehabilitación cardiorrespiratoria que incluya entrenamiento aeróbico y de fuerza:", opciones:["Aumento de la densidad ósea.","Aumento de los niveles de marcadores inflamatorios.","Aumento de la densidad capilar.","Reducción de la resistencia a la insulina."], correcta:"b", estado:"impugnada" },
   { id:495, categoria:"fisio", pregunta:"Señale la respuesta CORRECTA con respecto a la definición de ejercicio físico:", opciones:["Cualquier movimiento corporal provocado por la contracción muscular que conlleve un gasto energético asociado.","Actividad física planificada, estructurada y repetitiva.","Actividad sometida a unas reglas de juego que implique competitividad.","No busca una mejora de la autonomía en las actividades diarias."], correcta:"b", estado:null },
   { id:496, categoria:"fisio", pregunta:"Son objetivos de la fisioterapia en las unidades de cuidados intensivos:", opciones:["Contribuir a la pronta extubación.","Frenar el síndrome de inmovilidad.","Favorecer la expansión torácica.","Todos son objetivos de fisioterapia."], correcta:"d", estado:null },
   { id:497, categoria:"fisio", pregunta:"Señale la respuesta INCORRECTA con respecto a las CONTRAINDICACIONES del drenaje linfático en las lesiones traumatológicas:", opciones:["Flebitis.","Hipotensión.","Fiebre.","Síndrome de Sudeck."], correcta:"d", estado:null },
@@ -1301,7 +1332,7 @@ const PREGUNTAS = [
   { id:609, categoria:"general", pregunta:"La Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales establece que el tratamiento de datos de naturaleza penal podrá llevarse a cabo:", opciones:["Solo por profesionales de la abogacía y cuando tengan por objeto recoger la información facilitada por quienes les contraten para el ejercicio de sus funciones.","Por profesionales de la abogacía y de la procura, cuando tengan por objeto recoger la información facilitada por quienes les contraten para el ejercicio de sus funciones.","En los casos previstos por la propia Ley Orgánica 3/2018 y en otras normas de rango reglamentario.","Exclusivamente en los supuestos amparados en una norma de Derecho de la Unión y en la propia Ley Orgánica 2/2018."], correcta:"b", estado:null },
   { id:610, categoria:"general", pregunta:"Respecto al derecho de rectificación que regula la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales, señale la respuesta correcta:", opciones:["La persona afectada deberá indicar en su solicitud a qué datos se refiere y deberá acompañar, en todo caso, la documentación justificativa de la inexactitud de los datos.","La persona afectada deberá indicar en su solicitud a qué datos se refiere y la corrección que haya de realizarse, y cuando sea preciso, deberá acompañar la documentación justificativa de la inexactitud o carácter incompleto de los datos objeto de tratamiento.","La persona afectada deberá indicar en su solicitud solo la corrección que haya de realizarse y debe siempre acompañar la documentación justificativa de la inexactitud de los datos.","No es necesario que la persona afectada indique expresamente en su solicitud qué datos deben rectificarse."], correcta:"b", estado:null },
   { id:611, categoria:"general", pregunta:"Con relación al tratamiento de datos con fines de videovigilancia, señale la respuesta correcta:", opciones:["Solo las personas físicas podrán llevar a cabo el tratamiento de imágenes a través de sistemas de cámaras o videocámaras con la finalidad de preservar la seguridad de las personas y bienes, así como sus instalaciones.","Los datos serán suprimidos, en todo caso, en el plazo máximo de un mes desde su captación.","Los datos serán suprimidos en el plazo máximo de un mes desde su captación, salvo cuando hubieran de ser conservados para acreditar la comisión de actos que atenten contra la integridad de personas, bienes o instalaciones.","En el caso de que los datos hubieran de ser conservados más allá del plazo de un mes desde su captación para acreditar la comisión de actos que atenten contra la integridad de personas, bienes o instalaciones, deberán ser puestas a disposición de la autoridad competente en un plazo máximo de cuarenta y ocho horas desde que se tuviera conocimiento de la existencia de la grabación."], correcta:"c", estado:null },
-  { id:612, categoria:"general", pregunta:"Respecto a los sistemas de información de denuncias internas que contempla la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales, es correcta la siguiente afirmación:", opciones:["En todo caso, transcurridos tres meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, y sin excepción, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias.","La Ley no prevé plazo temporal alguno para la supresión de los datos del sistema de denuncias."], correcta:"d", estado:"dudosa" },
+  { id:612, categoria:"general", pregunta:"Respecto a los sistemas de información de denuncias internas que contempla la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales, es correcta la siguiente afirmación:", opciones:["En todo caso, transcurridos tres meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, y sin excepción, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias.","La Ley no prevé plazo temporal alguno para la supresión de los datos del sistema de denuncias."], correcta:"d", estado:null, fuentes:[["d", "ESK"], ["a", "LAB"]] },
   { id:613, categoria:"general", pregunta:"El artículo 1 del Decreto Legislativo 1/2023, de 16 de marzo, por el que se aprueba el texto refundido de la Ley para la Igualdad de Mujeres y Hombres y Vidas Libres de Violencia Machista contra las Mujeres, añade un concepto específico al objeto de la ley que refuerza el fin último de la norma, ¿cuál es?", opciones:["La igualdad de oportunidades.","El empoderamiento de las mujeres.","Lograr una sociedad libre de violencia machista.","La eliminación de roles tradicionales."], correcta:"c", estado:null },
   { id:614, categoria:"general", pregunta:"Según el artículo 2 del Decreto Legislativo 1/2023, de 16 de marzo, por el que se aprueba el texto refundido de la Ley para la Igualdad de Mujeres y Hombres y Vidas Libres de Violencia Machista contra las Mujeres, ¿a qué entidades privadas les es exigible el cumplimiento de los principios generales de esta ley durante su relación con la administración?", opciones:["Solo a las que tengan una plantilla superior a 250 personas.","A todas las empresas con sede en Euskadi.","A las que suscriban contratos o convenios, estén participadas por poderes públicos o sean beneficiarias de ayudas.","Ninguna entidad privada está sujeta a los principios de la ley."], correcta:"c", estado:null },
   { id:615, categoria:"general", pregunta:"Según el Decreto Legislativo 1/2023, de 16 de marzo, por el que se aprueba el texto refundido de la Ley para la Igualdad de Mujeres y Hombres y Vidas Libres de Violencia Machista contra las Mujeres, ¿cuál de estos es un principio general de actuación de los poderes públicos vascos incorporado en la nueva redacción del artículo 3?", opciones:["El principio de jerarquía administrativa.","La integración de la perspectiva interseccional.","El principio de celeridad procesal.","La centralización de recursos de acogida."], correcta:"b", estado:null },
@@ -1360,7 +1391,7 @@ const PREGUNTAS = [
   { id:668, categoria:"general", pregunta:"En relación con la violencia machista contra las mujeres, el Plan II Plan para la Igualdad de Mujeres y Hombres en Osakidetza (2025-2028) establece como línea de actuación prioritaria:", opciones:["El refuerzo de la prevención, la detección precoz y la mejora de la respuesta asistencial integrada desde el sistema de salud.","La derivación inmediata de cualquier caso detectado a servicios jurídicos externos, sin intervención del personal sanitario.","La creación de un registro anónimo donde las personas profesionales puedan denunciar conductas sin seguimiento posterior.","La limitación de la atención asistencial únicamente a las consecuencias físicas derivadas de la violencia."], correcta:"a", estado:null },
   { id:669, categoria:"general", pregunta:"El III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028 establece respecto a los mensajes audiovisuales que:", opciones:["Deben emitirse en la lengua que decidan las personas responsable de las unidades que utilizan estos sistemas audiovisuales.","Deben emitirse en las dos lenguas oficiales, primero en castellano y luego en euskera.","Deben emitirse en las dos lenguas oficiales, primero en euskera y luego en castellano.","Deben emitirse en una de las dos lenguas oficiales."], correcta:"c", estado:null },
   { id:670, categoria:"general", pregunta:"De acuerdo con el III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta correcta:", opciones:["Por aplicación de la Ley Orgánica de Protección de Datos Personales y garantía de los derechos digitales no puede constar en los datos personales de cada paciente de Osakidetza su idioma de preferencia para las comunicaciones con Osakidetza.","El signo azul con la letra e indica que la persona paciente no tiene competencia para comunicarse en un idioma que no sea el euskera para las comunicaciones orales con Osakidetza.","En los datos personales de cada paciente, se registrará su idioma de preferencia para las comunicaciones orales con Osakidetza .","A las personas que elijan el euskera como lengua prioritaria en sus comunicaciones con Osakidetza solo se les deberá ofrecer servicios en euskera."], correcta:"c", estado:null },
-  { id:671, categoria:"general", pregunta:"En atención al III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta correcta:", opciones:["“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente llevada a cabo en 2017.","Se atribuye a todas las direcciones y gerencias de Osakidetza la responsabilidad de realizar la campaña con el lema “Aukeratu zeure hizkuntza/Elige tu lengua”.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el primer año de planificación.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el tercer año de planificación."], correcta:"c", estado:null },
+  { id:671, categoria:"general", pregunta:"En atención al III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta correcta:", opciones:["“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente llevada a cabo en 2017.","Se atribuye a todas las direcciones y gerencias de Osakidetza la responsabilidad de realizar la campaña con el lema “Aukeratu zeure hizkuntza/Elige tu lengua”.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el primer año de planificación.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el tercer año de planificación."], correcta:"c", estado:null, fuentes:[["c", "ESK"], ["a", "LAB"]] },
   { id:672, categoria:"general", pregunta:"El III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028 contempla que tanto en los servicios de recepción y admisión, como en las unidades asistenciales y administrativas a toda la ciudadanía vascohablante debe garantizarse:", opciones:["La recepción en euskera.","La recepción en euskera solo cuando la comunicación oral con pacientes y personas usuarias sea de modo presencial.","La recepción en euskera solo cuando la comunicación con pacientes y personas usuarias sea telefónicamente.","La recepción en euskera solo por las y los empleados que sepan en euskera."], correcta:"a", estado:null },
   { id:673, categoria:"general", pregunta:"El III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028 establece que, en los escritos individualizados de respuesta a solicitudes y reclamaciones de pacientes o personas usuarias de Osakidetza se utilizará:", opciones:["La lengua utilizada por cada ciudadano o ciudadana.","Siempre el euskera como lengua preferente.","Siempre las dos lenguas oficiales independientemente de la lengua utilizada por cada ciudadano o ciudadana.","Ambas lenguas oficiales, siendo los escritos contestados primero en euskera y luego en castellano."], correcta:"a", estado:null },
   { id:674, categoria:"general", pregunta:"Siguiendo lo previsto en el III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta que no es correcta:", opciones:["Se pondrá a disposición del personal bilingüe que lo desee diferentes elementos identificativos portadores del circulo azul con la letra e, signo que invita a relacionarse en euskera.","El signo azul y la letra e solo se utilizará para la identificación individual del personal bilingüe.","En los centros de salud, consultorios y unidades hospitalarias, deberá estar colocado, de modo visible, el cartel que explica a las personas usuarias el significado del signo identificativo con la letra e.","Se estudiará introducir una variante del círculo azul con la letra e para el personal dispuesto a que le hablen en euskera pero que muestra dificultades para expresarse en ciertas situaciones."], correcta:"b", estado:null },
@@ -1378,10 +1409,10 @@ const PREGUNTAS = [
   { id:686, categoria:"general", pregunta:"Conforme al Artículo 5 de la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué requisito de nacionalidad se exige para poder recibir la prestación de ayuda para morir?", opciones:["Tener la ciudadanía española con residencia legal ininterrumpida de al menos 10 años.","Tener la nacionalidad española o tener residencia legal en España de al menos 5 años.","Ser mayor de edad y tener la nacionalidad española, residencia legal o certificado de empadronamiento que acredite un tiempo de permanencia superior a 12 meses en territorio español.","Tener la nacionalidad española y residencia en el mismo municipio durante los últimos 2 años."], correcta:"c", estado:null },
   { id:687, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué concepto define la ley como la \"administración directa a la persona paciente de una sustancia por parte del personal sanitario competente\"?", opciones:["Suicidio médicamente asistido.","Sedación paliativa profunda.","Eutanasia.","Asistencia para morir."], correcta:"d", estado:null },
   { id:688, categoria:"general", pregunta:"Según el Artículo 5 de la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es la condición que debe padecer la persona paciente para solicitar la prestación de ayuda para morir?", opciones:["Padecer una enfermedad incurable en fase terminal o un deterioro funcional grave.","Sufrir una enfermedad que limite gravemente su autonomía.","Padecer una enfermedad grave e incurable o un padecimiento grave, crónico e imposibilitante, causantes de un sufrimiento intolerable.","Sufrir un dolor físico o psíquico que no puede ser tratado con paliativos."], correcta:"c", estado:null },
-  { id:689, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál debe ser la periodicidad mínima con la que el personal facultativo responsable debe consultar a la persona paciente, una vez presentada la solicitud, para confirmar si mantiene su deseo?", opciones:["Al menos cada 7 días.","Al menos cada 15 días, debiendo dejarse constancia en la historia clínica.","Al menos cada 30 días, si el procedimiento se extiende.","Una única vez antes de la prestación."], correcta:"b", estado:null },
+  { id:689, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál debe ser la periodicidad mínima con la que el personal facultativo responsable debe consultar a la persona paciente, una vez presentada la solicitud, para confirmar si mantiene su deseo?", opciones:["Al menos cada 7 días.","Al menos cada 15 días, debiendo dejarse constancia en la historia clínica.","Al menos cada 30 días, si el procedimiento se extiende.","Una única vez antes de la prestación."], correcta:"d", estado:null },
   { id:690, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es el derecho que asiste al personal sanitario directamente implicado en la prestación de ayuda para morir?", opciones:["Derecho a la reubicación en un puesto de trabajo diferente.","Derecho a un incremento salarial por la complejidad de la prestación.","Derecho a la objeción de conciencia.","Derecho a recibir asistencia jurídica de oficio."], correcta:"c", estado:null },
-  { id:691, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué define como \"padecimiento grave, crónico e imposibilitante\"?", opciones:["Aquel que implica la existencia de sufrimiento físico o psíquico constante.","Aquel que genera una limitación que incide directamente sobre la autonomía física y capacidad de expresar su voluntad de la persona paciente.","La dependencia de otra persona para la realización de al menos dos actividades básicas de la vida diaria.","Una dolencia que ha sido declarada irreversible y con un pronóstico de vida inferior a seis meses."], correcta:"b", estado:null },
-  { id:692, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es el plazo que tiene la persona facultativa responsable para comunicar la resolución favorable a la Comisión de Garantía y Evaluación para su posterior verificación?", opciones:["Dentro de las 24 horas siguientes a la resolución.","Dentro del día siguiente natural a la resolución.","7 días desde la resolución favorable.","No existe un plazo establecido para esta comunicación."], correcta:"c", estado:null },
+  { id:691, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué define como \"padecimiento grave, crónico e imposibilitante\"?", opciones:["Aquel que implica la existencia de sufrimiento físico o psíquico constante.","Aquel que genera una limitación que incide directamente sobre la autonomía física y capacidad de expresar su voluntad de la persona paciente.","La dependencia de otra persona para la realización de al menos dos actividades básicas de la vida diaria.","Una dolencia que ha sido declarada irreversible y con un pronóstico de vida inferior a seis meses."], correcta:"b", estado:null, fuentes:[["b", "ESK"], ["a", "LAB"]] },
+  { id:692, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es el plazo que tiene la persona facultativa responsable para comunicar la resolución favorable a la Comisión de Garantía y Evaluación para su posterior verificación?", opciones:["Dentro de las 24 horas siguientes a la resolución.","Dentro del día siguiente natural a la resolución.","7 días desde la resolución favorable.","No existe un plazo establecido para esta comunicación."], correcta:"d", estado:null },
   { id:693, categoria:"general", pregunta:"¿Cuál es el principio general que establece la Ley 53/1984, de 26 de diciembre, de Incompatibilidades del personal al servicio de las Administraciones Públicas?", opciones:["La libre acumulación de empleos públicos.","La incompatibilidad para desempeñar más de un puesto en el sector público, salvo excepciones.","La compatibilidad automática entre empleo público y privado.","La compatibilidad solo en el ámbito sanitario."], correcta:"b", estado:null },
   { id:694, categoria:"general", pregunta:"Con carácter general, el personal comprendido en la Ley 53/1984, de 26 de diciembre, de Incompatibilidades del personal al servicio de las Administraciones Públicas, podrá desempeñar:", opciones:["Dos puestos públicos si uno es a tiempo parcial.","Un segundo puesto público únicamente con autorización previa y en los supuestos previstos por la Ley.","Cualquier actividad privada sin limitación.","Dos puestos públicos si pertenecen a distinta Administración."], correcta:"b", estado:null },
   { id:695, categoria:"general", pregunta:"Según la Ley 53/1984, de 26 de diciembre, de Incompatibilidades del personal al servicio de las Administraciones Públicas, ¿qué requisito es imprescindible para autorizar la compatibilidad con una actividad privada?", opciones:["Que la actividad sea sanitaria.","Que no se supere la jornada ordinaria establecida.","Que no se comprometa la imparcialidad o independencia del personal público.","Que lo autorice la jefatura inmediata sin más trámites."], correcta:"c", estado:null },
@@ -1688,6 +1719,7 @@ function launchStudy(blockKey) {
   }
 
   document.getElementById('study-title').textContent = `Estudio · ${label}${orderIcon}`;
+  document.getElementById('study-all-notice').style.display = blockKey === null ? 'block' : 'none';
   showScreen('study');
   renderStudyQ();
 }
@@ -1807,28 +1839,48 @@ function renderStudyQ() {
     const estado    = q.estado || null;
     const impugnada = estado === 'impugnada';
     const dudosa    = estado === 'dudosa';
-    const hasAnswer = q.correcta !== null && !impugnada;
+    const fuentes   = q.fuentes || null;
+    const hasAnswer = q.correcta !== null;
     const key       = prev.selectedKey;
     const correct   = prev.correct;
 
     document.querySelectorAll('#study-opts .opt-btn').forEach((btn,i) => {
       btn.disabled = true;
-      if (impugnada) {
-        if (keys[i] === q.correcta) btn.classList.add('correct');
-        else if (keys[i] === key && !correct) btn.classList.add('wrong');
-      } else if (dudosa && keys[i] === q.correcta) {
+      const letra = keys[i];
+      if (fuentes) {
+        const fuenteMatch = fuentes.find(f => f[0] === letra);
+        if (fuenteMatch) {
+          btn.classList.add('doubtful');
+          const sigla = document.createElement('span');
+          sigla.style.cssText = 'position:absolute;bottom:4px;right:6px;font-size:0.6rem;opacity:0.7;font-family:var(--mono)';
+          sigla.textContent = fuenteMatch[1];
+          btn.style.position = 'relative';
+          btn.appendChild(sigla);
+        } else if (letra === key && !correct) {
+          btn.classList.add('wrong');
+        }
+      } else if (impugnada) {
+        if (letra === q.correcta) btn.classList.add('correct');
+        else if (letra === key && !correct) btn.classList.add('wrong');
+      } else if (dudosa && letra === q.correcta) {
         btn.classList.add('doubtful');
-      } else if (!dudosa && hasAnswer && keys[i] === q.correcta) {
+      } else if (!dudosa && hasAnswer && letra === q.correcta) {
         btn.classList.add('correct');
-      } else if (hasAnswer && keys[i] === key && !correct) {
+      } else if (hasAnswer && letra === key && !correct) {
         btn.classList.add('wrong');
-      } else if (!hasAnswer && keys[i] === key) {
+      } else if (!hasAnswer && letra === key) {
         btn.classList.add('selected-exam');
       }
     });
 
     fb.style.display = 'block';
-    if (impugnada) {
+    if (fuentes) {
+      fb.className = 'feedback-box';
+      fb.style.background = 'rgba(245,158,11,0.1)';
+      fb.style.border = '1px solid rgba(245,158,11,0.3)';
+      const resumen = fuentes.map(f => '<strong>' + f[0].toUpperCase() + '</strong> según ' + f[1]).join(', ');
+      fb.innerHTML = '⚠️ <strong>Discrepancia entre fuentes:</strong> ' + resumen + '.';
+    } else if (impugnada) {
       fb.style.border = '';
       if (correct) {
         fb.className = 'feedback-box ok';
@@ -1879,15 +1931,17 @@ function selectStudyAnswer(key, q) {
   const estado     = q.estado || null;
   const impugnada  = estado === 'impugnada';
   const dudosa     = estado === 'dudosa';
+  const fuentes    = q.fuentes || null;  // [{letra, fuente}]
   const hasAnswer  = q.correcta !== null;
-  const correct    = hasAnswer && key === q.correcta;
+  // Con fuentes: correcto si la letra elegida coincide con alguna de las fuentes
+  const correctLetras = fuentes ? fuentes.map(f => f[0]) : (hasAnswer ? [q.correcta] : []);
+  const correct    = correctLetras.includes(key);
 
   data.answered[q.id] = { selectedKey:key, correct };
 
-  if (hasAnswer) {
+  if (hasAnswer || fuentes) {
     if (correct) {
       data.streaks[q.id] = (data.streaks[q.id]||0)+1;
-      // Quitar de difíciles solo si lleva 5 aciertos consecutivos
       if (data.streaks[q.id] >= 5) {
         const di = data.difficult.indexOf(q.id);
         if (di !== -1) data.difficult.splice(di,1);
@@ -1903,24 +1957,47 @@ function selectStudyAnswer(key, q) {
   const keys = ['a','b','c','d'];
   document.querySelectorAll('#study-opts .opt-btn').forEach((btn,i) => {
     btn.disabled = true;
-    if (dudosa && keys[i] === q.correcta) {
+    const letra = keys[i];
+    if (fuentes) {
+      // Doble fuente: todas las correctas en amarillo con sigla
+      const fuenteMatch = fuentes.find(f => f[0] === letra);
+      if (fuenteMatch) {
+        btn.classList.add('doubtful');
+        const sigla = document.createElement('span');
+        sigla.style.cssText = 'position:absolute;bottom:4px;right:6px;font-size:0.6rem;opacity:0.7;font-family:var(--mono)';
+        sigla.textContent = fuenteMatch[1];
+        btn.style.position = 'relative';
+        btn.appendChild(sigla);
+      } else if (letra === key && !correct) {
+        btn.classList.add('wrong');
+      }
+    } else if (dudosa && letra === q.correcta) {
       btn.classList.add('doubtful');
-    } else if (hasAnswer && keys[i] === q.correcta) {
+    } else if (hasAnswer && letra === q.correcta) {
       btn.classList.add('correct');
-    } else if (hasAnswer && keys[i] === key && !correct) {
+    } else if (hasAnswer && letra === key && !correct) {
       btn.classList.add('wrong');
-    } else if (!hasAnswer && keys[i] === key) {
+    } else if (!hasAnswer && letra === key) {
       btn.classList.add('selected-exam');
     }
   });
 
-  const streak     = data.streaks[q.id]||0;
   const isMastered = data.mastered.includes(q.id);
   const fb = document.getElementById('study-feedback');
   fb.style.display  = 'block';
   fb.style.background = '';
 
-  if (impugnada) {
+  if (fuentes) {
+    fb.className = 'feedback-box';
+    fb.style.background = 'rgba(245,158,11,0.1)';
+    fb.style.border = '1px solid rgba(245,158,11,0.3)';
+    const resumen = fuentes.map(f => '<strong>' + f[0].toUpperCase() + '</strong> según ' + f[1]).join(', ');
+    if (correct) {
+      fb.innerHTML = '⚠️ <strong>Discrepancia entre fuentes.</strong> Tu respuesta coincide con una de ellas: ' + resumen + '.';
+    } else {
+      fb.innerHTML = '⚠️ <strong>Discrepancia entre fuentes.</strong> Las respuestas marcadas son: ' + resumen + '. Contrástalo con tu material.';
+    }
+  } else if (impugnada) {
     fb.style.border = '';
     if (correct) {
       fb.className = 'feedback-box ok';
@@ -2008,7 +2085,11 @@ function blockCompleteKeep() {
 }
 
 function resetBlock() {
-  if (!confirm('¿Reiniciar bloque? Se borrará el progreso de todas las preguntas de este bloque.')) return;
+  document.getElementById('reset-block-modal').style.display = 'flex';
+}
+
+function confirmResetBlock() {
+  document.getElementById('reset-block-modal').style.display = 'none';
   studyList.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
   saveData(data);
   studyIndex = 0;
@@ -2017,11 +2098,21 @@ function resetBlock() {
 
 function goToQuestion() {
   const input = document.getElementById('goto-input');
-  const qId   = parseInt(input.value);
-  if (isNaN(qId)) return;
-  const idx = studyList.findIndex(q => q.id === qId);
-  if (idx !== -1) {
+  const num   = parseInt(input.value);
+  if (isNaN(num) || num < 1) return;
+
+  // Buscar primero por posición relativa en el bloque (1-based)
+  let idx = num - 1;
+  if (idx >= 0 && idx < studyList.length) {
     studyIndex = idx;
+    renderStudyQ();
+    input.value = '';
+    return;
+  }
+  // Fallback: buscar por id absoluto
+  const idxById = studyList.findIndex(q => q.id === num);
+  if (idxById !== -1) {
+    studyIndex = idxById;
     renderStudyQ();
     input.value = '';
   } else {

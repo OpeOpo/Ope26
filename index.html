@@ -375,6 +375,54 @@
     </div>
   </div>
 
+  <!-- MODAL BORRAR ESTADÍSTICAS -->
+  <div id="reset-stats-modal" style="
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:24px">
+    <div style="
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">🗑 ¿Borrar estadísticas?</div>
+        <p style="font-size:0.88rem;line-height:1.6;color:var(--muted)">Se borrarán todas las estadísticas y empezarás de cero. Esta acción no se puede deshacer.</p>
+      </div>
+      <button onclick="confirmResetStats()"
+        style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:var(--sans)">
+        Sí, borrar todo
+      </button>
+      <button onclick="document.getElementById('reset-stats-modal').style.display='none'"
+        style="background:transparent;border:1px solid var(--border);color:var(--text);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:var(--sans)">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL ENTREGAR EXAMEN -->
+  <div id="finish-exam-modal" style="
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:24px">
+    <div style="
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">📝 ¿Entregar examen?</div>
+        <p style="font-size:0.88rem;line-height:1.6;color:var(--muted)">Las preguntas sin responder contarán como incorrectas.</p>
+      </div>
+      <button onclick="confirmFinishExam()"
+        style="background:var(--accent);border:none;color:var(--bg);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:var(--sans)">
+        Sí, entregar
+      </button>
+      <button onclick="document.getElementById('finish-exam-modal').style.display='none'"
+        style="background:transparent;border:1px solid var(--border);color:var(--text);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:var(--sans)">
+        Seguir el examen
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL REINICIAR BLOQUE -->
   <div id="reset-block-modal" style="
       display:none;position:fixed;inset:0;z-index:1000;
@@ -1542,7 +1590,11 @@ function showScreen(id) {
 function goHome() { showScreen('home'); }
 
 function resetStats() {
-  if (!confirm('¿Borrar todas las estadísticas y empezar de cero? Esta acción no se puede deshacer.')) return;
+  document.getElementById('reset-stats-modal').style.display = 'flex';
+}
+
+function confirmResetStats() {
+  document.getElementById('reset-stats-modal').style.display = 'none';
   data = defaultData();
   saveData(data);
   renderStats();
@@ -2218,7 +2270,11 @@ function confirmLeaveExam() {
 }
 
 function finishExam() {
-  if (!confirm('¿Entregar? Las sin responder cuentan como incorrectas.')) return;
+  document.getElementById('finish-exam-modal').style.display = 'flex';
+}
+
+function confirmFinishExam() {
+  document.getElementById('finish-exam-modal').style.display = 'none';
   let correct=0, wrong=0, blank=0;
   const examRecord = { ids: examList.map(q=>q.id), answers: {}, date: Date.now() };
 

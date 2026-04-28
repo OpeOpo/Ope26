@@ -1859,7 +1859,9 @@ function renderStudyQ() {
   studyAnswered = !!prev;
 
   document.getElementById('study-counter').textContent = `Pregunta ${studyIndex+1} de ${studyList.length}`;
-  document.getElementById('study-score').textContent   = `✓ ${Object.values(data.answered).filter(a=>a.correct).length} · ✗ ${Object.values(data.answered).filter(a=>!a.correct).length}`;
+  const blockIds2 = new Set(studyList.map(q=>q.id));
+  const blockAns2 = Object.entries(data.answered).filter(([id])=>blockIds2.has(parseInt(id))).map(([,v])=>v);
+  document.getElementById('study-score').textContent   = `✓ ${blockAns2.filter(a=>a.correct).length} · ✗ ${blockAns2.filter(a=>!a.correct).length}`;
   document.getElementById('study-prog').style.width    = (studyIndex/studyList.length*100).toFixed(1)+'%';
   document.getElementById('study-num').textContent     = `Pregunta #${q.id}`;
   document.getElementById('study-pregunta').textContent = q.pregunta;
@@ -2090,7 +2092,9 @@ function selectStudyAnswer(key, q) {
   }
 
   document.getElementById('study-next-btn').disabled = false;
-  document.getElementById('study-score').textContent = `✓ ${Object.values(data.answered).filter(a=>a.correct).length} · ✗ ${Object.values(data.answered).filter(a=>!a.correct).length}`;
+  const blockIds = new Set(studyList.map(q=>q.id));
+  const blockAnswered = Object.entries(data.answered).filter(([id])=>blockIds.has(parseInt(id))).map(([,v])=>v);
+  document.getElementById('study-score').textContent = `✓ ${blockAnswered.filter(a=>a.correct).length} · ✗ ${blockAnswered.filter(a=>!a.correct).length}`;
   updateHardBtn(q.id);
 }
 

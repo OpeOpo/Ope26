@@ -553,7 +553,7 @@
           <div class="help-title">🖐️ Dos bancos de preguntas</div>
           <div class="help-body">La app contiene 500 preguntas de fisioterapia específica y 200 de temario común. Puedes estudiarlas por separado o combinarlas. En el modo examen se simulan las condiciones reales: 85 preguntas de fisio y 15 de temario común, tal como establece la OPE.</div>
         </div>
-        <div>
+        <div class="help-section">
           <div class="help-title">🔴 Marcar como difícil</div>
           <div class="help-body">En modo estudio puedes marcar cualquier pregunta como difícil. Si fallas también se marca automáticamente. Desde la sección "Difíciles · Dominadas" puedes repasar por separado las de fisioterapia, las de temario común, o una mezcla aleatoria de ambas.</div>
         </div>
@@ -568,14 +568,24 @@
           <div class="help-body">Muestra el número de preguntas difíciles (separadas por fisioterapia y temario común) y dominadas, con su porcentaje sobre el total. Por bloque aparece el número de vueltas completadas y el porcentaje de acierto del último intento. Desde aquí también puedes borrar todo para empezar de cero.</div>
         </div>
 
-
-
         <div class="help-section" style="border:none;padding-bottom:0">
           <div class="help-title">⚠️ Sobre las respuestas</div>
           <div class="help-body">Las respuestas han sido extraídas poniendo en común las claves de varios sindicatos, principalmente ESK, LAB y Satse. Cuando hay discrepancia entre fuentes, las opciones se muestran en amarillo con la sigla del sindicato correspondiente. Las preguntas marcadas como impugnadas tienen la respuesta oficial pendiente de resolución y se muestran con aviso específico. Contrasta siempre con tu material ante cualquier duda.</div>
         </div>
 
       </div>
+    </div>
+  </div>
+
+  <!-- MASTERED REVIEW -->
+  <div id="mastered-review" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="showScreen('difficult')">←</button>
+      <h2>Dominadas</h2>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-mastered">☀️</button>
+    </div>
+    <div class="favs-body">
+      <div id="mastered-review-content" style="padding:16px 20px"></div>
     </div>
   </div>
 
@@ -754,10 +764,7 @@
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-difficult">☀️</button>
     </div>
     <div class="favs-body" id="favs-body">
-      <div style="padding:16px 20px">
-        <button class="btn-primary" onclick="launchDifficult()" id="difficult-launch-btn">📋 Repasar difíciles</button>
-      </div>
-      <div id="difficult-content"></div>
+      <div id="difficult-content" style="padding:16px 20px"></div>
     </div>
   </div>
 
@@ -1278,7 +1285,7 @@ const PREGUNTAS = [
   { id:505, categoria:"general", pregunta:"Según la normativa de ordenación de las profesiones sanitarias, el personal profesional y las personas responsables de los centros sanitarios facilitarán a sus pacientes el ejercicio del derecho a conocer:", opciones:["El nombre, la titulación, la especialidad y la hoja de servicios del personal sanitario que les atiende, así como la categoría y función de dicho personal, si así estuvieran definidas en su centro o institución.","El nombre, la titulación y la especialidad del personal sanitario que les atiende y su categoría, pero no su función en su centro o institución.","El nombre, la titulación y la especialidad del personal sanitario que les atiende, así como la categoría y función de dicho personal, si así estuvieran definidas en su centro o institución.","El nombre, la titulación y la especialidad del personal sanitario que les atiende, pero no su categoría y función en su centro o institución."], correcta:"c", estado:null },
   { id:506, categoria:"general", pregunta:"De acuerdo con las normas generales de ordenación de las profesiones sanitarias, el ejercicio del derecho del personal profesional sanitario a la renuncia a la atención a una persona paciente queda condicionado a que (señálese la respuesta incorrecta):", opciones:["Su renuncia no conlleve desatención de la persona paciente.","La renuncia se ejerza de acuerdo con procedimientos regulares.","Quede constancia, aunque no sea formal, de la renuncia.","La renuncia se ejerza de acuerdo con procedimientos establecidos y explícitos."], correcta:"c", estado:null },
   { id:507, categoria:"general", pregunta:"Los centros sanitarios revisarán que el personal sanitario de su plantilla cumple los requisitos necesarios para ejercer la profesión conforme a lo previsto en la Ley 44/2003, de 21 de noviembre, de ordenación de las profesiones sanitarias y en las demás normas aplicables:", opciones:["Cada cinco años como mínimo.","Cada tres años como mínimo.","Cada dos años como mínimo.","Cada cuatro años como mínimo."], correcta:"b", estado:null },
-  { id:508, categoria:"general", pregunta:"Según dispone la Ley 44/2003, de 21 de noviembre, de ordenación de las profesiones sanitarias, cuando una actuación sanitaria se realice por un equipo de profesionales (señálese la respuesta incorrecta):", opciones:["Se articulará, preferentemente, de forma jerarquizada, atendiendo a los criterios de conocimientos y competencia y, en su caso, al de titulación del personal profesional que integra el equipo, en función de la actividad concreta a desarrollar, de la confianza y conocimiento recíproco de las capacidades de quienes forman el equipo, y de los principios de accesibilidad y continuidad asistencial de las personas atendidas.","Se articulará de forma jerarquizada o colegiada, atendiendo a los criterios de conocimientos y competencia y, en su caso, al de titulación del personal profesional que integra el equipo, en función de la actividad concreta a desarrollar, de la confianza y conocimiento recíproco de las capacidades de quienes forman el equipo, y de los principios de accesibilidad y continuidad asistencial de las personas atendidas.","Se articulará de forma preferentemente colegiada, atendiendo a los criterios de conocimientos y competencia y, en su caso, al de titulación del personal profesional que integra el equipo, en función de la actividad concreta a desarrollar, de la confianza y conocimiento recíproco de las capacidades de quienes forman el equipo, y de los principios de accesibilidad y continuidad asistencial de las personas atendidas.","Ninguna de las anteriores es correcta."], correcta:null, estado:"impugnada" },
+  { id:508, categoria:"general", pregunta:"Según dispone la Ley 44/2003, de 21 de noviembre, de ordenación de las profesiones sanitarias, cuando una actuación sanitaria se realice por un equipo de profesionales (señálese la respuesta incorrecta):", opciones:["Se articulará, preferentemente, de forma jerarquizada, atendiendo a los criterios de conocimientos y competencia y, en su caso, al de titulación del personal profesional que integra el equipo, en función de la actividad concreta a desarrollar, de la confianza y conocimiento recíproco de las capacidades de quienes forman el equipo, y de los principios de accesibilidad y continuidad asistencial de las personas atendidas.","Se articulará de forma jerarquizada o colegiada, atendiendo a los criterios de conocimientos y competencia y, en su caso, al de titulación del personal profesional que integra el equipo, en función de la actividad concreta a desarrollar, de la confianza y conocimiento recíproco de las capacidades de quienes forman el equipo, y de los principios de accesibilidad y continuidad asistencial de las personas atendidas.","Se articulará de forma preferentemente colegiada, atendiendo a los criterios de conocimientos y competencia y, en su caso, al de titulación del personal profesional que integra el equipo, en función de la actividad concreta a desarrollar, de la confianza y conocimiento recíproco de las capacidades de quienes forman el equipo, y de los principios de accesibilidad y continuidad asistencial de las personas atendidas.","Ninguna de las anteriores es correcta."], correcta:"d", estado:"impugnada" },
   { id:509, categoria:"general", pregunta:"De acuerdo con la Ley 44/2003, de 21 de noviembre, de ordenación de las profesiones sanitarias, diga cuál de los siguientes principios generales de la relación entre las personas que ejercen profesiones sanitarias y las personas atendidas no es tal:", opciones:["El personal profesional tiene el deber de hacer un uso racional de los recursos diagnósticos y terapéuticos a su cargo, tomando en consideración, entre otros, los costes de sus decisiones y evitando la sobreutilización, la infrautilización y la inadecuada utilización de los mismos.","El personal profesional tiene el deber de prestar una atención sanitaria técnica y profesional adecuada a las necesidades de salud de las personas que atiende, de acuerdo con el estado de desarrollo de los conocimientos científicos de cada momento y con los niveles de calidad y seguridad que se establecen en esta ley y el resto de normas legales y deontológicas aplicables.","El personal profesional tiene el deber de proporcionar a las personas pacientes información precisa sobre su formación profesional, la forma en que han actualizado sus conocimientos y las demandas de responsabilidad que hayan podido derivar en responsabilidades administrativas.","El personal profesional tiene el deber de respetar la personalidad, dignidad e intimidad de las personas a su cuidado y debe respetar su participación en las tomas de decisiones que les afecten. En todo caso, deben ofrecer una información suficiente y adecuada para que puedan ejercer su derecho al consentimiento sobre dichas decisiones."], correcta:"c", estado:null },
   { id:510, categoria:"general", pregunta:"De acuerdo con la Ley 44/2003, de 21 de noviembre, de ordenación de las profesiones sanitarias, los centros sanitarios acreditados para desarrollar programas de formación continuada:", opciones:["Deberán contar con jefaturas de estudios, con la coordinación docente y con el personal tutor de la formación que resulten adecuados en función de las actividades a desarrollar, así como con una figura de defensoría del alumnado.","Deberán contar una comisión de docencia, así como con jefaturas de estudios, coordinación docente y personal tutor de la formación que resulten adecuados en función de las actividades a desarrollar.","Deberán contar una comisión de docencia y con una figura de defensoría del alumnado, así como con jefaturas de estudios, coordinación docente y personal tutor de la formación que resulten adecuados en función de las actividades a desarrollar.","Todas las anteriores son incorrectas."], correcta:"d", estado:null },
   { id:511, categoria:"general", pregunta:"Según dispone la Ley 16/2003, de 28 de mayo, de cohesión y calidad del Sistema Nacional de Salud, sus disposiciones se aplicarán a:", opciones:["A los servicios sanitarios de financiación pública y a los privados, en los mismos términos.","A los servicios sanitarios de financiación pública. También a los privados en lo que se refiere al control de las actividades de salud pública y en materia de garantías de información, seguridad y calidad.","A los servicios sanitarios de financiación pública y a los privados concertados.","Únicamente a los servicios sanitarios de financiación pública."], correcta:"b", estado:null },
@@ -1593,6 +1600,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   if (id === 'stats')        renderStats();
   if (id === 'difficult')    renderDifficult();
+  if (id === 'mastered-review') { renderMasteredReview(); syncTheme(); }
   if (id === 'saved-exams')  renderSavedExams();
   if (id === 'home')         renderHome();
 }
@@ -2017,8 +2025,10 @@ function selectStudyAnswer(key, q) {
   {
     if (correct) {
       data.streaks[q.id] = (data.streaks[q.id]||0)+1;
-      if (data.streaks[q.id] >= 5) removeHard(q);
-      if (data.streaks[q.id] >= 10 && !data.mastered.includes(q.id)) data.mastered.push(q.id);
+      if (data.streaks[q.id] >= 10 && !data.mastered.includes(q.id)) {
+        data.mastered.push(q.id);
+        removeHard(q);
+      }
     } else {
       data.streaks[q.id] = 0;
       addHard(q);
@@ -2431,7 +2441,7 @@ function renderStats() {
 
   const hardQs = PREGUNTAS.filter(q => isHardQ(q));
   html += `<div><div class="section-title">🔴 Difíciles (${hardQs.length})</div>`;
-  if (hardQs.length) html += `<div style="margin-bottom:8px"><button class="btn-primary" style="font-size:0.85rem;padding:10px 16px" onclick="launchDifficult('all')">📋 Repasar difíciles</button></div>`;
+  if (hardQs.length) html += `<div style="margin-bottom:8px"><button class="btn-primary" style="font-size:0.85rem;padding:10px 16px" onclick="showScreen('difficult')">📋 Repasar difíciles</button></div>`;
   html += `<div style="display:flex;flex-direction:column;gap:8px">`;
   if (!hardQs.length) html += `<div class="empty-state">¡Sin preguntas difíciles de momento!</div>`;
   else hardQs.forEach(q => { html += `<div class="q-list-item"><span class="badge hard">🔴</span><span>#${q.id} · ${q.pregunta}</span></div>`; });
@@ -2469,7 +2479,7 @@ function launchDifficult(mode) {
     label  = 'Difíciles Común';
   } else {
     hardQs = PREGUNTAS.filter(q => isHardQ(q));
-    label  = 'Difíciles Mixto';
+    label  = 'Difíciles Todas';
   }
   if (!hardQs.length) { alert('No tienes preguntas marcadas en esta categoría todavía.'); return; }
   studyList  = shuffle(hardQs.slice());
@@ -2479,32 +2489,27 @@ function launchDifficult(mode) {
   renderStudyQ();
 }
 
-function launchMastered() {
-  const masteredQs = PREGUNTAS.filter(q => data.mastered.includes(q.id));
-  if (!masteredQs.length) { alert('No tienes preguntas dominadas todavía.'); return; }
-  studyList  = shuffle(masteredQs.slice());
-  studyIndex = 0;
-  document.getElementById('study-title').textContent = `Repaso Dominadas · 🔀 (${studyList.length})`;
-  showScreen('study');
-  renderStudyQ();
+function reviewMastered() {
+  showScreen('mastered-review');
+  renderMasteredReview();
 }
 
 function renderDifficult() {
-  const hardQs     = PREGUNTAS.filter(q => data.difficult.includes(q.id));
-  const masteredQs = PREGUNTAS.filter(q => data.mastered.includes(q.id));
+  const hardFisio    = PREGUNTAS.filter(q => q.categoria === 'fisio'    && data.difficultFisio.includes(q.id));
+  const hardGeneral  = PREGUNTAS.filter(q => q.categoria === 'general'  && data.difficultGeneral.includes(q.id));
+  const hardQs       = [...hardFisio, ...hardGeneral];
+  const masteredQs   = PREGUNTAS.filter(q => data.mastered.includes(q.id));
   let html = '';
 
   // ── DIFÍCILES ──
-  const hardFisio    = PREGUNTAS.filter(q => q.categoria === 'fisio'    && data.difficultFisio.includes(q.id));
-  const hardGeneral  = PREGUNTAS.filter(q => q.categoria === 'general'  && data.difficultGeneral.includes(q.id));
   html += `
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
       <button class="btn-primary" style="${hardFisio.length ? '' : 'opacity:0.4;pointer-events:none'}"
         onclick="launchDifficult('fisio')">🖐️ Repasar Fisio (${hardFisio.length})</button>
       <button class="btn-primary" style="${hardGeneral.length ? '' : 'opacity:0.4;pointer-events:none'}"
         onclick="launchDifficult('general')">📋 Repasar Común (${hardGeneral.length})</button>
-      <button class="btn-primary" style="${hardQs.length ? '' : 'opacity:0.4;pointer-events:none'};background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3)"
-        onclick="launchDifficult('all')">🔀 Repasar Mixto (${hardQs.length})</button>
+      <button class="btn-primary" style="${hardQs.length ? '' : 'opacity:0.4;pointer-events:none'}"
+        onclick="launchDifficult('all')">🔀 Repasar todas (${hardQs.length})</button>
     </div>`;
   html += `<div class="section-title" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleSection('hard-list')">
       <span>🔴 Difíciles — ${hardQs.length} preguntas</span>
@@ -2535,30 +2540,57 @@ function renderDifficult() {
   html += `
     <div style="margin-bottom:4px">
       <button class="btn-primary" style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.4);color:#a78bfa;${masteredQs.length ? '' : 'opacity:0.4;pointer-events:none'}"
-        onclick="launchMastered()">🏆 Repasar dominadas (${masteredQs.length})</button>
-    </div>
-    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleSection('mastered-list')">
-      <span>🏆 Dominadas — ${masteredQs.length} preguntas</span>
-      <span id="mastered-list-icon" style="font-size:0.9rem;color:var(--muted)">▼</span>
-    </div>
-    <div id="mastered-list" style="display:none;flex-direction:column;gap:8px">`;
+        onclick="reviewMastered()">🏆 Revisar dominadas (${masteredQs.length})</button>
+    </div>`;
 
+  document.getElementById('difficult-content').innerHTML = html;
+}
+
+function renderMasteredReview() {
+  const masteredQs = PREGUNTAS.filter(q => data.mastered.includes(q.id));
+  let html = '';
   if (!masteredQs.length) {
-    html += `<div class="empty-state">Acierta la misma pregunta 10 veces consecutivas para dominarla.</div>`;
+    html = `<div class="empty-state">Acierta la misma pregunta 10 veces consecutivas para dominarla.</div>`;
   } else {
     masteredQs.forEach(q => {
-      html += `<div class="q-list-item" style="flex-direction:column;gap:6px">
-        <div style="display:flex;gap:8px;align-items:center">
+      const alreadyHard = isHardQ(q);
+      html += `<div class="q-list-item" style="flex-direction:column;gap:8px;margin-bottom:4px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <span class="badge" style="background:rgba(167,139,250,0.15);color:#a78bfa">🏆</span>
-          <span style="font-size:0.72rem;color:var(--muted)">#${q.id}</span>
+          <span style="font-size:0.72rem;color:var(--muted)">#${q.id <= 500 ? q.id : q.id - 500} · ${q.categoria === 'fisio' ? 'Fisio' : 'Común'}</span>
+          <button onclick="toggleMasteredToHard(${q.id})" id="mth-btn-${q.id}"
+            style="margin-left:auto;font-size:0.72rem;padding:4px 10px;border-radius:20px;border:1px solid ${alreadyHard ? 'rgba(239,68,68,0.4)' : 'rgba(100,100,100,0.3)'};background:${alreadyHard ? 'rgba(239,68,68,0.1)' : 'transparent'};color:${alreadyHard ? 'var(--red)' : 'var(--muted)'};cursor:pointer">
+            ${alreadyHard ? '🔴 En difíciles' : '+ Añadir a difíciles'}
+          </button>
         </div>
-        <span>${q.pregunta}</span>
+        <span style="font-size:0.85rem">${q.pregunta}</span>
       </div>`;
     });
   }
-  html += `</div>`;
+  document.getElementById('mastered-review-content').innerHTML = html;
+}
 
-  document.getElementById('difficult-content').innerHTML = html;
+function toggleMasteredToHard(qId) {
+  const q = PREGUNTAS.find(p => p.id === qId);
+  if (!q) return;
+  if (isHardQ(q)) {
+    // Quitar de difíciles (sin sacar de dominadas)
+    removeHard(q);
+  } else {
+    // Añadir a difíciles + sacar de dominadas + resetear racha
+    addHard(q);
+    const mi = data.mastered.indexOf(qId);
+    if (mi !== -1) data.mastered.splice(mi, 1);
+    data.streaks[qId] = 0;
+  }
+  saveData(data);
+  // Actualizar botón
+  const btn = document.getElementById('mth-btn-' + qId);
+  const nowHard = isHardQ(q);
+  btn.style.borderColor = nowHard ? 'rgba(239,68,68,0.4)' : 'rgba(100,100,100,0.3)';
+  btn.style.background  = nowHard ? 'rgba(239,68,68,0.1)' : 'transparent';
+  btn.style.color       = nowHard ? 'var(--red)' : 'var(--muted)';
+  btn.textContent       = nowHard ? '🔴 En difíciles' : '+ Añadir a difíciles';
 }
 
 function toggleSection(id) {

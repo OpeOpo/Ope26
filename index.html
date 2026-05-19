@@ -78,7 +78,7 @@
     background: var(--bg); position: sticky; top: 0; z-index: 10;
     transition: background 0.25s, border-color 0.25s;
   }
-  .header h2 { font-size: 1rem; font-weight: 600; flex: 1; }
+  .header h2 { font-size: 1rem; font-weight: 600; flex: 1; min-width: 0; }
   .btn-back {
     background: var(--surface2); border: none; color: var(--text);
     width: 36px; height: 36px; border-radius: 10px;
@@ -334,6 +334,7 @@
   <div id="home" class="screen active">
     <div class="logo-area">
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+        <button onclick="document.getElementById('info-home').style.display='flex'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--sans)"><span style="font-weight:700;font-style:italic">i</span> Info</button>
         <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️</button>
       </div>
       <div class="logo-icon">📚</div>
@@ -352,15 +353,7 @@
         <div class="arrow">›</div>
       </button>
     </div>
-    <!-- Botón info -->
-    <div style="position:absolute;bottom:24px;left:20px">
-      <button onclick="document.getElementById('help-modal').style.display='flex'"
-        style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);
-               border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;
-               display:flex;align-items:center;gap:5px;font-family:var(--sans)">
-        <span style="font-weight:700;font-style:italic">i</span> Info
-      </button>
-    </div>
+
     <!-- Texto actualización centrado -->
     <div style="position:absolute;bottom:70px;left:0;right:0;text-align:center;pointer-events:none">
       <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 19/05</span>
@@ -506,73 +499,93 @@
   </div>
 
   <!-- HELP MODAL -->
-  <div id="help-modal" style="
-      display:none;position:fixed;inset:0;z-index:1000;
-      background:rgba(0,0,0,0.7);align-items:flex-end;justify-content:center;padding:0">
-    <div style="
-        background:var(--surface);border-top:1px solid var(--border);
-        border-radius:20px 20px 0 0;width:100%;max-width:480px;
-        max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
-      <!-- Header -->
+  <div id="info-home" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);align-items:flex-end;justify-content:center;padding:0">
+    <div style="background:var(--surface);border-top:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
       <div style="padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
-        <div style="font-size:1.05rem;font-weight:700">📖 Cómo usar OpoTest</div>
-        <button onclick="document.getElementById('help-modal').style.display='none'"
-          style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);
-                 border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;
-                 display:flex;align-items:center;justify-content:center">✕</button>
+        <div style="font-size:1.05rem;font-weight:700">📖 OpoTest</div>
+        <button onclick="document.getElementById('info-home').style.display='none'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
       </div>
-      <!-- Contenido scrollable -->
       <div style="overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px">
-
-        <div class="help-section">
-          <div class="help-title">🎯 Modo Estudio</div>
-          <div class="help-body">Practica pregunta a pregunta con feedback inmediato. Elige entre orden secuencial (recomendado para empezar) o aleatorio, y selecciona un bloque concreto de 100 preguntas o el banco completo. En modo secuencial la app retoma desde la última pregunta no respondida. Puedes retroceder a preguntas ya contestadas para revisar tu respuesta, y al llegar a la última el botón "Siguiente" vuelve a la primera.</div>
+        <div class="help-section" style="">
+          <div class="help-title">🖐️ Dos temarios</div>
+          <div class="help-body">La app tiene 500 preguntas de fisioterapia específica y 200 de temario común, en la proporción real de la OPE Fisio 2026.</div>
         </div>
-
-        <div class="help-section">
-          <div class="help-title">🔄 Reiniciar bloque</div>
-          <div class="help-body">Dentro del modo estudio hay un botón "Reiniciar bloque" que borra el progreso de todas las preguntas del bloque actual y te lleva a la primera. Al completar todas las preguntas también aparece un modal con la opción de borrar y reiniciar o seguir consultando.</div>
-        </div>
-
-        <div class="help-section">
-          <div class="help-title">📝 Modo Examen</div>
-          <div class="help-body">Simula las condiciones reales: 100 preguntas (85 fisio + 15 general) sin feedback hasta el final. La navegación es circular — al llegar a la última puedes seguir avanzando y vuelves a la primera. Cada examen se guarda automáticamente al entregarlo para poder repetirlo.</div>
-        </div>
-
-        <div class="help-section">
-          <div class="help-title">⚠️ Marcar como dudosa en examen</div>
-          <div class="help-body">Durante el examen puedes marcar preguntas como dudosas. El contador superior muestra cuántas tienes marcadas. El botón "Ir a siguiente sin contestar / dudosa" te lleva directamente a la siguiente pregunta pendiente o dudosa, para hacer una segunda vuelta eficiente sin pasar por las que ya tienes seguras.</div>
-        </div>
-
-        <div class="help-section">
-          <div class="help-title">🔀 Distribución inteligente</div>
-          <div class="help-body">Los exámenes nuevos priorizan preguntas no vistas en exámenes anteriores (80%), mezclando con un 20% de repetidas. Así cubres el banco completo antes de empezar a repetir en serio.</div>
-        </div>
-
-        <div class="help-section">
-          <div class="help-title">🖐️ Dos bancos de preguntas</div>
-          <div class="help-body">La app contiene 500 preguntas de fisioterapia específica y 200 de temario común. Puedes estudiarlas por separado o combinarlas. En el modo examen se simulan las condiciones reales: 85 preguntas de fisio y 15 de temario común, tal como establece la OPE.</div>
-        </div>
-        <div class="help-section">
-          <div class="help-title">🔴 Marcar como difícil</div>
-          <div class="help-body">En modo estudio puedes marcar cualquier pregunta como difícil. Si fallas también se marca automáticamente. Desde la sección "Difíciles · Dominadas" puedes repasar por separado las de fisioterapia, las de temario común, o una mezcla aleatoria de ambas.</div>
-        </div>
-
-        <div class="help-section">
-          <div class="help-title">🏆 Preguntas dominadas</div>
-          <div class="help-body">Cuando aciertas la misma pregunta 10 veces seguidas pasa a "Dominadas". No desaparece de los bloques normales — es solo un indicador de que la tienes bien consolidada.</div>
-        </div>
-
-        <div class="help-section">
-          <div class="help-title">📊 Estadísticas</div>
-          <div class="help-body">Muestra el número de preguntas difíciles (separadas por fisioterapia y temario común) y dominadas, con su porcentaje sobre el total. Por bloque aparece el número de vueltas completadas y el porcentaje de acierto del último intento. Desde aquí también puedes borrar todo para empezar de cero.</div>
-        </div>
-
         <div class="help-section" style="border:none;padding-bottom:0">
           <div class="help-title">⚠️ Sobre las respuestas</div>
-          <div class="help-body">Las respuestas han sido extraídas poniendo en común las claves de varios sindicatos, principalmente ESK, LAB y Satse. Cuando hay discrepancia entre fuentes, las opciones se muestran en amarillo con la sigla del sindicato correspondiente. Las preguntas marcadas como impugnadas tienen la respuesta oficial pendiente de resolución y se muestran con aviso específico. Contrasta siempre con tu material ante cualquier duda.</div>
+          <div class="help-body">Las respuestas provienen de las claves de ESK, LAB y Satse. Cuando los sindicatos no coinciden, las opciones se muestran en amarillo con la fuente correspondiente. Las preguntas impugnadas se señalan con un aviso específico. Ante cualquier duda, contrástalo con tu material.</div>
         </div>
-
+      </div>
+    </div>
+  </div>
+  <div id="info-study" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);align-items:flex-end;justify-content:center;padding:0">
+    <div style="background:var(--surface);border-top:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+        <div style="font-size:1.05rem;font-weight:700">📖 Modo Estudio</div>
+        <button onclick="document.getElementById('info-study').style.display='none'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px">
+        <div class="help-section" style="">
+          <div class="help-title">🎯 Cómo funciona</div>
+          <div class="help-body">Practica pregunta a pregunta viendo al instante si has acertado. Elige un bloque de 100 preguntas o el banco completo, en orden o de forma aleatoria. La app recuerda por dónde ibas y puedes volver atrás para repasar respuestas anteriores.</div>
+        </div>
+        <div class="help-section" style="">
+          <div class="help-title">🔄 Reiniciar bloque</div>
+          <div class="help-body">Borra el progreso del bloque actual y empieza desde cero. Al terminar todas las preguntas también te preguntará si quieres reiniciar.</div>
+        </div>
+        <div class="help-section" style="border:none;padding-bottom:0">
+          <div class="help-title">🔴 Marcar como difícil</div>
+          <div class="help-body">Si fallas una pregunta se marca automáticamente como difícil. También puedes marcarla tú con el botón rojo. Las difíciles se acumulan en la sección "Difíciles · Dominadas" para repasarlas cuando quieras.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="info-exam" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);align-items:flex-end;justify-content:center;padding:0">
+    <div style="background:var(--surface);border-top:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+        <div style="font-size:1.05rem;font-weight:700">📖 Modo Examen</div>
+        <button onclick="document.getElementById('info-exam').style.display='none'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px">
+        <div class="help-section" style="">
+          <div class="help-title">📝 Cómo funciona</div>
+          <div class="help-body">Simula el examen real: 100 preguntas (85 de fisio + 15 de temario común) sin ver los resultados hasta el final. Puedes navegar libremente entre preguntas. Cada examen se guarda para poder repetirlo.</div>
+        </div>
+        <div class="help-section" style="border:none;padding-bottom:0">
+          <div class="help-title">⚠️ Marcar como dudosa</div>
+          <div class="help-body">Señala las preguntas sobre las que tienes dudas. El botón de navegación rápida te lleva directamente a las que están sin contestar o marcadas, para hacer una segunda vuelta eficiente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="info-difficult" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);align-items:flex-end;justify-content:center;padding:0">
+    <div style="background:var(--surface);border-top:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+        <div style="font-size:1.05rem;font-weight:700">📖 Difíciles · Dominadas</div>
+        <button onclick="document.getElementById('info-difficult').style.display='none'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px">
+        <div class="help-section" style="">
+          <div class="help-title">🔴 Preguntas difíciles</div>
+          <div class="help-body">Aquí aparecen las preguntas que has fallado o marcado manualmente. Puedes repasar solo las de fisio, solo las de temario común, o todas juntas. El orden es siempre aleatorio.</div>
+        </div>
+        <div class="help-section" style="border:none;padding-bottom:0">
+          <div class="help-title">🏆 Preguntas dominadas</div>
+          <div class="help-body">Cuando aciertas la misma pregunta 10 veces seguidas pasa a "Dominadas" y desaparece de difíciles. Desde "Revisar dominadas" puedes devolverlas a difíciles si ves que no las tienes consolidadas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="info-stats" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.7);align-items:flex-end;justify-content:center;padding:0">
+    <div style="background:var(--surface);border-top:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+        <div style="font-size:1.05rem;font-weight:700">📖 Estadísticas</div>
+        <button onclick="document.getElementById('info-stats').style.display='none'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px">
+        <div class="help-section" style="border:none;padding-bottom:0">
+          <div class="help-title">📊 Qué muestra</div>
+          <div class="help-body">Aquí ves tu progreso: preguntas respondidas, difíciles y dominadas. Por bloque aparece el número de vueltas completadas y el porcentaje de acierto. Desde aquí también puedes borrar todo el progreso para empezar de cero.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -594,6 +607,7 @@
     <div class="header">
       <button class="btn-back" onclick="goHome()">←</button>
       <h2 id="selector-title">Seleccionar bloque</h2>
+      <button id="selector-info-btn" onclick="openSelectorInfo()" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--sans)"><span style="font-weight:700;font-style:italic">i</span> Info</button>
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-selector">☀️</button>
     </div>
     <div class="selector-body">
@@ -741,6 +755,7 @@
                border-radius:8px;padding:6px 12px;font-size:0.78rem;cursor:pointer;white-space:nowrap">
         🗑 Borrar
       </button>
+      <button onclick="document.getElementById('info-stats').style.display='flex'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--sans)"><span style="font-weight:700;font-style:italic">i</span> Info</button>
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-stats">☀️</button>
     </div>
     <div class="stats-body" id="stats-body"></div>
@@ -761,6 +776,8 @@
     <div class="header">
       <button class="btn-back" onclick="goHome()">←</button>
       <h2>Difíciles · Dominadas</h2>
+      <button onclick="document.getElementById('info-difficult').style.display='flex'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--sans)"><span style="font-weight:700;font-style:italic">i</span> Info</button>
+      <button onclick="document.getElementById('info-difficult').style.display='flex'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--sans)"><span style="font-weight:700;font-style:italic">i</span> Info</button>
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-difficult">☀️</button>
     </div>
     <div class="favs-body" id="favs-body">
@@ -1630,6 +1647,11 @@ function renderHome() {
 // ══════════════════════════════════════════
 //  SELECTOR
 // ══════════════════════════════════════════
+function openSelectorInfo() {
+  const mid = selectorMode === 'exam' ? 'info-exam' : 'info-study';
+  document.getElementById(mid).style.display = 'flex';
+}
+
 function openSelector(mode) {
   selectorMode = mode;
   document.getElementById('selector-title').textContent = mode === 'study' ? '🎯 Modo Estudio' : '📝 Modo Examen';

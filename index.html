@@ -232,8 +232,9 @@
   .opt-btn.wrong .opt-label   { background: var(--red); color: #fff; }
   .opt-btn.doubtful            { background: rgba(245,158,11,0.10); border-color: var(--yellow); }
   .opt-btn.doubtful .opt-label { background: var(--yellow); color: #000; }
-  .opt-btn.selected-exam            { background: rgba(255,255,255,0.15); border-color: var(--accent); }
-  .opt-btn.selected-exam .opt-label { background: var(--accent); color: var(--bg); }
+  .opt-btn.selected-exam            { background: rgba(99,102,241,0.10); border-color: var(--accent); }
+  .opt-btn.selected-exam .opt-label { background: var(--accent); color: #fff; }
+
 
   .feedback-box { margin: 12px 20px 0; padding: 14px 16px; border-radius: var(--radius); font-size: 0.85rem; line-height: 1.5; animation: fadeIn 0.25s ease; }
   .feedback-box.ok { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: var(--green); }
@@ -362,7 +363,7 @@
     </div>
     <!-- Texto actualización centrado -->
     <div style="position:absolute;bottom:70px;left:0;right:0;text-align:center;pointer-events:none">
-      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 17/05</span>
+      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 19/05</span>
     </div>
     <!-- Botón estadísticas pequeño abajo derecha -->
     <div style="position:absolute;bottom:24px;right:20px">
@@ -549,8 +550,12 @@
         </div>
 
         <div class="help-section">
+          <div class="help-title">🖐️ Dos bancos de preguntas</div>
+          <div class="help-body">La app contiene 500 preguntas de fisioterapia específica y 200 de temario común. Puedes estudiarlas por separado o combinarlas. En el modo examen se simulan las condiciones reales: 85 preguntas de fisio y 15 de temario común, tal como establece la OPE.</div>
+        </div>
+        <div>
           <div class="help-title">🔴 Marcar como difícil</div>
-          <div class="help-body">En modo estudio puedes marcar cualquier pregunta como difícil. Si fallas también se marca automáticamente. Desde la sección "Difíciles · Dominadas" puedes repasar solo esas preguntas cuando quieras.</div>
+          <div class="help-body">En modo estudio puedes marcar cualquier pregunta como difícil. Si fallas también se marca automáticamente. Desde la sección "Difíciles · Dominadas" puedes repasar por separado las de fisioterapia, las de temario común, o una mezcla aleatoria de ambas.</div>
         </div>
 
         <div class="help-section">
@@ -560,17 +565,14 @@
 
         <div class="help-section">
           <div class="help-title">📊 Estadísticas</div>
-          <div class="help-body">Muestra el número de preguntas difíciles y dominadas con su porcentaje sobre el total. Por bloque aparece el número de vueltas completadas y el porcentaje de acierto del último intento. Desde aquí también puedes borrar todo para empezar de cero.</div>
+          <div class="help-body">Muestra el número de preguntas difíciles (separadas por fisioterapia y temario común) y dominadas, con su porcentaje sobre el total. Por bloque aparece el número de vueltas completadas y el porcentaje de acierto del último intento. Desde aquí también puedes borrar todo para empezar de cero.</div>
         </div>
 
-        <div class="help-section">
-          <div class="help-title">☀️ / 🌙 Modo diurno y nocturno</div>
-          <div class="help-body">El toggle está disponible en todas las pantallas de la app, no solo en el inicio. Tu preferencia se guarda entre sesiones.</div>
-        </div>
+
 
         <div class="help-section" style="border:none;padding-bottom:0">
           <div class="help-title">⚠️ Sobre las respuestas</div>
-          <div class="help-body">Las respuestas han sido extraídas poniendo en común las claves de varios sindicatos, principalmente ESK, LAB y Satse. Algunas preguntas pueden admitir más de una respuesta válida según la fuente — si tienes dudas sobre alguna, contrástala con tu material. Las preguntas impugnadas y las dudosas están señaladas específicamente.</div>
+          <div class="help-body">Las respuestas han sido extraídas poniendo en común las claves de varios sindicatos, principalmente ESK, LAB y Satse. Cuando hay discrepancia entre fuentes, las opciones se muestran en amarillo con la sigla del sindicato correspondiente. Las preguntas marcadas como impugnadas tienen la respuesta oficial pendiente de resolución y se muestran con aviso específico. Contrasta siempre con tu material ante cualquier duda.</div>
         </div>
 
       </div>
@@ -1333,7 +1335,7 @@ const PREGUNTAS = [
   { id:562, categoria:"general", pregunta:"Para el desarrollo de funciones de propuesta y asesoramiento, así como de participación en las organizaciones de servicios sanitarios, existirá un Consejo de Dirección en cada una de ellas, integrado por:", opciones:["El equipo directivo, las jefaturas de unidad que se determinen y una representación de personas vocales electas que formen parte de los Consejos Técnicos de participación profesional respectivos.","El equipo directivo, las jefaturas de unidad que se determinen, representantes sindicales y una representación de personas vocales electas que formen parte de los Consejos Técnicos de participación profesional respectivos.","El equipo directivo y las jefaturas de unidad que se determinen.","Todas las anteriores son falsas."], correcta:"a", estado:null },
   { id:563, categoria:"general", pregunta:"Las organizaciones de servicios sanitarios del ente público Osakidetza-Servicio Vasco de Salud podrán:", opciones:["Descentralizar la organización y su funcionamiento operativo, delegando en quienes ostenten la responsabilidad clínica facultades de gestión, aunque solo en materia de personal y siempre de acuerdo con el marco estratégico, los planes de gestión y el compromiso del contrato-programa suscrito por la organización.","Descentralizar la organización y su funcionamiento operativo, delegando en quienes ostenten la responsabilidad clínica facultades de gestión, pero solo en materia económica y siempre de acuerdo con el marco estratégico, los planes de gestión y el compromiso del contrato-programa suscrito por la organización.","Descentralizar la organización y su funcionamiento operativo, delegando en quienes ostenten la responsabilidad clínica facultades de gestión tanto en materia económica como de personal, de acuerdo con el marco estratégico, los planes de gestión y el compromiso del contrato-programa suscrito por la organización.","Todas las anteriores son falsas."], correcta:"c", estado:null },
   { id:564, categoria:"general", pregunta:"En materia específica de inversiones, la competencia para ejecutar las compras de suministros que se consideren centralizadas, así como definir y/o ejecutar, en su caso, las consideradas integradas corresponde a:", opciones:["El Consejo de Administración del ente público Osakidetza-Servicio Vasco de Salud.","La organización central de administración y gestión corporativa del ente público Osakidetza-Servicio Vasco de Salud.","La organización de servicios del ente público Osakidetza-Servicio Vasco de Salud.","A quien ostente la titularidad de la Dirección-Gerencia de cada organización de servicios sanitarios del Osakidetza-Servicio Vasco de Salud."], correcta:"b", estado:null },
-  { id:565, categoria:"general", pregunta:"En el ámbito de una organización de servicios sanitarios del ente público Osakidetza-Servicio Vasco de Salud, presidir los Consejos Técnicos de participación profesional y promover su eficaz funcionamiento es una tarea que corresponde a:", opciones:["La Dirección General del Ente.","Quien ostente la titularidad de la Dirección-Gerencia del Ente.","La Dirección Médica del Ente.","Ninguna de las anteriores."], correcta:"c", estado:null },
+  { id:565, categoria:"general", pregunta:"En el ámbito de una organización de servicios sanitarios del ente público Osakidetza-Servicio Vasco de Salud, presidir los Consejos Técnicos de participación profesional y promover su eficaz funcionamiento es una tarea que corresponde a:", opciones:["La Dirección General del Ente.","Quien ostente la titularidad de la Dirección-Gerencia del Ente.","La Dirección Médica del Ente.","Ninguna de las anteriores."], correcta:"d", estado:null, fuentes:[["d", "ESK"], ["c", "LAB"], ["c", "Satse"]] },
   { id:566, categoria:"general", pregunta:"Según el Artículo 1 del Decreto 100/2018 de las organizaciones sanitarias integradas del ente público Osakidetza-Servicio Vasco de Salud, ¿qué dos niveles asistenciales se integran en las Organizaciones Sanitarias Integradas (OSI) de Osakidetza?", opciones:["Atención especializada y Atención de Urgencias.","Salud Pública y Servicios Sociosanitarios.","Atención hospitalaria y Atención de Emergencias.","Atención primaria y Atención hospitalaria."], correcta:"d", estado:null },
   { id:567, categoria:"general", pregunta:"Según el Artículo 2.1 del Decreto 100/2018 de las organizaciones sanitarias integradas del ente público Osakidetza-Servicio Vasco de Salud, ¿qué objetivo último persigue la configuración de las OSI?", opciones:["Reducir el gasto farmacéutico mediante la unificación de compras.","Favorecer la integración clínica de manera que la atención se articule en torno a la persona.","Centralizar los servicios de atención primaria en las sedes hospitalarias.","Eliminar las categorías profesionales de atención primaria para unificarlas con las hospitalarias."], correcta:"b", estado:null },
   { id:568, categoria:"general", pregunta:"Según el Artículo 1 del Decreto 100/2018 de las organizaciones sanitarias integradas del ente público Osakidetza-Servicio Vasco de Salud, ¿bajo qué principio fundamental actuarán las Organizaciones Sanitarias Integradas (OSI) del ente público Osakidetza-Servicio Vasco de Salud ?", opciones:["Principio de coordinación territorial y sectorial.","Principio de jerarquía funcional única.","Principio de autonomía económico-financiera y de gestión.","Principio de centralización de todos los recursos."], correcta:"c", estado:null },
@@ -1380,7 +1382,7 @@ const PREGUNTAS = [
   { id:609, categoria:"general", pregunta:"La Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales establece que el tratamiento de datos de naturaleza penal podrá llevarse a cabo:", opciones:["Solo por profesionales de la abogacía y cuando tengan por objeto recoger la información facilitada por quienes les contraten para el ejercicio de sus funciones.","Por profesionales de la abogacía y de la procura, cuando tengan por objeto recoger la información facilitada por quienes les contraten para el ejercicio de sus funciones.","En los casos previstos por la propia Ley Orgánica 3/2018 y en otras normas de rango reglamentario.","Exclusivamente en los supuestos amparados en una norma de Derecho de la Unión y en la propia Ley Orgánica 2/2018."], correcta:"b", estado:null },
   { id:610, categoria:"general", pregunta:"Respecto al derecho de rectificación que regula la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales, señale la respuesta correcta:", opciones:["La persona afectada deberá indicar en su solicitud a qué datos se refiere y deberá acompañar, en todo caso, la documentación justificativa de la inexactitud de los datos.","La persona afectada deberá indicar en su solicitud a qué datos se refiere y la corrección que haya de realizarse, y cuando sea preciso, deberá acompañar la documentación justificativa de la inexactitud o carácter incompleto de los datos objeto de tratamiento.","La persona afectada deberá indicar en su solicitud solo la corrección que haya de realizarse y debe siempre acompañar la documentación justificativa de la inexactitud de los datos.","No es necesario que la persona afectada indique expresamente en su solicitud qué datos deben rectificarse."], correcta:"b", estado:null },
   { id:611, categoria:"general", pregunta:"Con relación al tratamiento de datos con fines de videovigilancia, señale la respuesta correcta:", opciones:["Solo las personas físicas podrán llevar a cabo el tratamiento de imágenes a través de sistemas de cámaras o videocámaras con la finalidad de preservar la seguridad de las personas y bienes, así como sus instalaciones.","Los datos serán suprimidos, en todo caso, en el plazo máximo de un mes desde su captación.","Los datos serán suprimidos en el plazo máximo de un mes desde su captación, salvo cuando hubieran de ser conservados para acreditar la comisión de actos que atenten contra la integridad de personas, bienes o instalaciones.","En el caso de que los datos hubieran de ser conservados más allá del plazo de un mes desde su captación para acreditar la comisión de actos que atenten contra la integridad de personas, bienes o instalaciones, deberán ser puestas a disposición de la autoridad competente en un plazo máximo de cuarenta y ocho horas desde que se tuviera conocimiento de la existencia de la grabación."], correcta:"c", estado:null },
-  { id:612, categoria:"general", pregunta:"Respecto a los sistemas de información de denuncias internas que contempla la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales, es correcta la siguiente afirmación:", opciones:["En todo caso, transcurridos tres meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, y sin excepción, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias.","La Ley no prevé plazo temporal alguno para la supresión de los datos del sistema de denuncias."], correcta:"a", estado:"impugnada", fuentes:[["a", "LAB"], ["a", "Satse"], ["d", "ESK"]] },
+  { id:612, categoria:"general", pregunta:"Respecto a los sistemas de información de denuncias internas que contempla la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales, es correcta la siguiente afirmación:", opciones:["En todo caso, transcurridos tres meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias, salvo que la finalidad de la conservación sea dejar evidencia del funcionamiento del modelo de prevención de la comisión de delitos.","En todo caso, y sin excepción, transcurridos seis meses desde la introducción de los datos, deberá procederse a su supresión del sistema de denuncias.","La Ley no prevé plazo temporal alguno para la supresión de los datos del sistema de denuncias."], correcta:"a", estado:null, fuentes:[["d", "ESK"], ["a", "LAB"], ["a", "Satse"]] },
   { id:613, categoria:"general", pregunta:"El artículo 1 del Decreto Legislativo 1/2023, de 16 de marzo, por el que se aprueba el texto refundido de la Ley para la Igualdad de Mujeres y Hombres y Vidas Libres de Violencia Machista contra las Mujeres, añade un concepto específico al objeto de la ley que refuerza el fin último de la norma, ¿cuál es?", opciones:["La igualdad de oportunidades.","El empoderamiento de las mujeres.","Lograr una sociedad libre de violencia machista.","La eliminación de roles tradicionales."], correcta:"c", estado:null },
   { id:614, categoria:"general", pregunta:"Según el artículo 2 del Decreto Legislativo 1/2023, de 16 de marzo, por el que se aprueba el texto refundido de la Ley para la Igualdad de Mujeres y Hombres y Vidas Libres de Violencia Machista contra las Mujeres, ¿a qué entidades privadas les es exigible el cumplimiento de los principios generales de esta ley durante su relación con la administración?", opciones:["Solo a las que tengan una plantilla superior a 250 personas.","A todas las empresas con sede en Euskadi.","A las que suscriban contratos o convenios, estén participadas por poderes públicos o sean beneficiarias de ayudas.","Ninguna entidad privada está sujeta a los principios de la ley."], correcta:"c", estado:null },
   { id:615, categoria:"general", pregunta:"Según el Decreto Legislativo 1/2023, de 16 de marzo, por el que se aprueba el texto refundido de la Ley para la Igualdad de Mujeres y Hombres y Vidas Libres de Violencia Machista contra las Mujeres, ¿cuál de estos es un principio general de actuación de los poderes públicos vascos incorporado en la nueva redacción del artículo 3?", opciones:["El principio de jerarquía administrativa.","La integración de la perspectiva interseccional.","El principio de celeridad procesal.","La centralización de recursos de acogida."], correcta:"b", estado:null },
@@ -1455,12 +1457,12 @@ const PREGUNTAS = [
   { id:684, categoria:"general", pregunta:"El Plan Oncológico Integral de Euskadi (POIE) 2025-2030 se alinea con el Plan de Salud de Euskadi 2030. ¿Cuál de las siguientes es una de las prioridades estratégicas de dicho Plan de Salud mencionadas en el documento?", opciones:["Creación de una red de servicios privados de salud.","Aumentar la esperanza de vida a 90 años.","Reducir la morbimortalidad evitable y disminuir las desigualdades en salud","Eliminación total del cáncer infantil antes de 2030."], correcta:"c", estado:null },
   { id:685, categoria:"general", pregunta:"¿Cuál es el objeto fundamental de la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, según su Artículo 1?", opciones:["Regular los cuidados paliativos avanzados en el Sistema Nacional de Salud.","Modificar el Código Penal para despenalizar la asistencia al suicidio.","Regular el derecho de toda persona a solicitar y recibir la prestación de ayuda para morir y la obligación de las Administraciones de garantizarla.","Establecer el registro de las voluntades anticipadas y testamentos vitales."], correcta:"c", estado:null },
   { id:686, categoria:"general", pregunta:"Conforme al Artículo 5 de la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué requisito de nacionalidad se exige para poder recibir la prestación de ayuda para morir?", opciones:["Tener la ciudadanía española con residencia legal ininterrumpida de al menos 10 años.","Tener la nacionalidad española o tener residencia legal en España de al menos 5 años.","Ser mayor de edad y tener la nacionalidad española, residencia legal o certificado de empadronamiento que acredite un tiempo de permanencia superior a 12 meses en territorio español.","Tener la nacionalidad española y residencia en el mismo municipio durante los últimos 2 años."], correcta:"c", estado:null },
-  { id:687, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué concepto define la ley como la \"administración directa a la persona paciente de una sustancia por parte del personal sanitario competente\"?", opciones:["Suicidio médicamente asistido.","Sedación paliativa profunda.","Eutanasia.","Asistencia para morir."], correcta:"d", estado:null },
+  { id:687, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué concepto define la ley como la \"administración directa a la persona paciente de una sustancia por parte del personal sanitario competente\"?", opciones:["Suicidio médicamente asistido.","Sedación paliativa profunda.","Eutanasia.","Asistencia para morir."], correcta:"c", estado:null, fuentes:[["c", "ESK"], ["d", "LAB"], ["d", "Satse"]] },
   { id:688, categoria:"general", pregunta:"Según el Artículo 5 de la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es la condición que debe padecer la persona paciente para solicitar la prestación de ayuda para morir?", opciones:["Padecer una enfermedad incurable en fase terminal o un deterioro funcional grave.","Sufrir una enfermedad que limite gravemente su autonomía.","Padecer una enfermedad grave e incurable o un padecimiento grave, crónico e imposibilitante, causantes de un sufrimiento intolerable.","Sufrir un dolor físico o psíquico que no puede ser tratado con paliativos."], correcta:"c", estado:null },
-  { id:689, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál debe ser la periodicidad mínima con la que el personal facultativo responsable debe consultar a la persona paciente, una vez presentada la solicitud, para confirmar si mantiene su deseo?", opciones:["Al menos cada 7 días.","Al menos cada 15 días, debiendo dejarse constancia en la historia clínica.","Al menos cada 30 días, si el procedimiento se extiende.","Una única vez antes de la prestación."], correcta:"d", estado:null },
+  { id:689, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál debe ser la periodicidad mínima con la que el personal facultativo responsable debe consultar a la persona paciente, una vez presentada la solicitud, para confirmar si mantiene su deseo?", opciones:["Al menos cada 7 días.","Al menos cada 15 días, debiendo dejarse constancia en la historia clínica.","Al menos cada 30 días, si el procedimiento se extiende.","Una única vez antes de la prestación."], correcta:"d", estado:"impugnada", fuentes:[["d", "ESK"], ["b", "LAB"]] },
   { id:690, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es el derecho que asiste al personal sanitario directamente implicado en la prestación de ayuda para morir?", opciones:["Derecho a la reubicación en un puesto de trabajo diferente.","Derecho a un incremento salarial por la complejidad de la prestación.","Derecho a la objeción de conciencia.","Derecho a recibir asistencia jurídica de oficio."], correcta:"c", estado:null },
-  { id:691, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué define como \"padecimiento grave, crónico e imposibilitante\"?", opciones:["Aquel que implica la existencia de sufrimiento físico o psíquico constante.","Aquel que genera una limitación que incide directamente sobre la autonomía física y capacidad de expresar su voluntad de la persona paciente.","La dependencia de otra persona para la realización de al menos dos actividades básicas de la vida diaria.","Una dolencia que ha sido declarada irreversible y con un pronóstico de vida inferior a seis meses."], correcta:"b", estado:null },
-  { id:692, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es el plazo que tiene la persona facultativa responsable para comunicar la resolución favorable a la Comisión de Garantía y Evaluación para su posterior verificación?", opciones:["Dentro de las 24 horas siguientes a la resolución.","Dentro del día siguiente natural a la resolución.","7 días desde la resolución favorable.","No existe un plazo establecido para esta comunicación."], correcta:"d", estado:null },
+  { id:691, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿qué define como \"padecimiento grave, crónico e imposibilitante\"?", opciones:["Aquel que implica la existencia de sufrimiento físico o psíquico constante.","Aquel que genera una limitación que incide directamente sobre la autonomía física y capacidad de expresar su voluntad de la persona paciente.","La dependencia de otra persona para la realización de al menos dos actividades básicas de la vida diaria.","Una dolencia que ha sido declarada irreversible y con un pronóstico de vida inferior a seis meses."], correcta:"b", estado:null, fuentes:[["b", "ESK"], ["a", "LAB"], ["a", "Satse"]] },
+  { id:692, categoria:"general", pregunta:"Según la Ley Orgánica 3/2021, de 24 de marzo, de regulación de la eutanasia, ¿cuál es el plazo que tiene la persona facultativa responsable para comunicar la resolución favorable a la Comisión de Garantía y Evaluación para su posterior verificación?", opciones:["Dentro de las 24 horas siguientes a la resolución.","Dentro del día siguiente natural a la resolución.","7 días desde la resolución favorable.","No existe un plazo establecido para esta comunicación."], correcta:"d", estado:"impugnada", fuentes:[["d", "ESK"], ["d", "LAB"]] },
   { id:693, categoria:"general", pregunta:"¿Cuál es el principio general que establece la Ley 53/1984, de 26 de diciembre, de Incompatibilidades del personal al servicio de las Administraciones Públicas?", opciones:["La libre acumulación de empleos públicos.","La incompatibilidad para desempeñar más de un puesto en el sector público, salvo excepciones.","La compatibilidad automática entre empleo público y privado.","La compatibilidad solo en el ámbito sanitario."], correcta:"b", estado:null },
   { id:694, categoria:"general", pregunta:"Con carácter general, el personal comprendido en la Ley 53/1984, de 26 de diciembre, de Incompatibilidades del personal al servicio de las Administraciones Públicas, podrá desempeñar:", opciones:["Dos puestos públicos si uno es a tiempo parcial.","Un segundo puesto público únicamente con autorización previa y en los supuestos previstos por la Ley.","Cualquier actividad privada sin limitación.","Dos puestos públicos si pertenecen a distinta Administración."], correcta:"b", estado:null },
   { id:695, categoria:"general", pregunta:"Según la Ley 53/1984, de 26 de diciembre, de Incompatibilidades del personal al servicio de las Administraciones Públicas, ¿qué requisito es imprescindible para autorizar la compatibilidad con una actividad privada?", opciones:["Que la actividad sea sanitaria.","Que no se supere la jornada ordinaria establecida.","Que no se comprometa la imparcialidad o independencia del personal público.","Que lo autorice la jefatura inmediata sin más trámites."], correcta:"c", estado:null },
@@ -1480,11 +1482,18 @@ const EXAM_TOTAL       = 100; // preguntas por examen
 const LS_KEY = 'opoTest_v2';
 
 function defaultData() {
-  return { answered:{}, favorites:[], difficult:[], mastered:[], streaks:{}, examsCount:0, lastExam:null, savedExams:[], examSeenIds:{}, blockStats:{} };
+  return { answered:{}, favorites:[], difficultFisio:[], difficultGeneral:[], mastered:[], streaks:{}, examsCount:0, lastExam:null, savedExams:[], examSeenIds:{}, blockStats:{} };
 }
 function migrateData(d) {
   if (!d.mastered)    d.mastered    = [];
   if (!d.streaks)     d.streaks     = {};
+  if (d.difficult && !d.difficultFisio) {
+    d.difficultFisio    = d.difficult.filter(id => id <= 500);
+    d.difficultGeneral  = d.difficult.filter(id => id > 500);
+    delete d.difficult;
+  }
+  if (!d.difficultFisio)   d.difficultFisio   = [];
+  if (!d.difficultGeneral) d.difficultGeneral = [];
   if (!d.savedExams)  d.savedExams  = [];
   if (!d.examSeenIds) d.examSeenIds = {};
   if (!d.blockStats)  d.blockStats  = {};
@@ -1713,9 +1722,9 @@ function renderBlocksList() {
         <div><div class="b-title">📚 Todas las preguntas</div><div class="b-sub">${PREGUNTAS.length} preguntas</div></div>
         <div class="b-pct" style="color:${progressColor(PREGUNTAS)}">${progressLabel(PREGUNTAS)}</div>
       </button>`;
-    const hardQs = PREGUNTAS.filter(q=>data.difficult.includes(q.id));
+    const hardQs = PREGUNTAS.filter(q => isHardQ(q));
     if (hardQs.length) {
-      html += `<button class="block-btn" style="border-color:rgba(239,68,68,0.3)" onclick="launchDifficult()">
+      html += `<button class="block-btn" style="border-color:rgba(239,68,68,0.3)" onclick="showScreen('difficult')">
         <div><div class="b-title">📋 Repasar difíciles</div><div class="b-sub">${hardQs.length} preguntas marcadas</div></div>
         <div class="b-pct" style="color:var(--red)">→</div>
       </button>`;
@@ -1846,11 +1855,28 @@ function renderSavedExams() {
 // ══════════════════════════════════════════
 //  STUDY
 // ══════════════════════════════════════════
+
+function getDiffArray(q) {
+  return q.categoria === 'fisio' ? data.difficultFisio : data.difficultGeneral;
+}
+function isHardQ(q) {
+  return getDiffArray(q).includes(q.id);
+}
+function addHard(q) {
+  const arr = getDiffArray(q);
+  if (!arr.includes(q.id)) arr.push(q.id);
+}
+function removeHard(q) {
+  const arr = getDiffArray(q);
+  const i = arr.indexOf(q.id);
+  if (i !== -1) arr.splice(i, 1);
+}
 function updateHardBtn(qId) {
-  const isHard = data.difficult.includes(qId);
+  const q = studyList[studyIndex];
+  const hard = isHardQ(q);
   const btn = document.getElementById('study-hard-btn');
-  btn.className   = 'tag-btn' + (isHard ? ' active-hard' : '');
-  btn.textContent = isHard ? '✅ Marcada como difícil' : '🔴 Marcar como difícil';
+  btn.className   = 'tag-btn' + (hard ? ' active-hard' : '');
+  btn.textContent = hard ? '✅ Marcada como difícil' : '🔴 Marcar como difícil';
 }
 
 function renderStudyQ() {
@@ -1894,7 +1920,6 @@ function renderStudyQ() {
     const impugnada = estado === 'impugnada';
     const dudosa    = estado === 'dudosa';
     const fuentes   = q.fuentes || null;
-    const hasAnswer = q.correcta !== null;
     const key       = prev.selectedKey;
     const correct   = prev.correct;
 
@@ -1922,12 +1947,10 @@ function renderStudyQ() {
         else if (letra === key && !correct) btn.classList.add('wrong');
       } else if (dudosa && letra === q.correcta) {
         btn.classList.add('doubtful');
-      } else if (!dudosa && hasAnswer && letra === q.correcta) {
+      } else if (letra === q.correcta) {
         btn.classList.add('correct');
-      } else if (hasAnswer && letra === key && !correct) {
+      } else if (letra === key && !correct) {
         btn.classList.add('wrong');
-      } else if (!hasAnswer && letra === key) {
-        btn.classList.add('selected-exam');
       }
     });
 
@@ -1952,11 +1975,6 @@ function renderStudyQ() {
       fb.style.background = 'rgba(245,158,11,0.1)';
       fb.style.border = '1px solid rgba(245,158,11,0.3)';
       fb.innerHTML = `⚠️ <strong>Respuesta dudosa.</strong> La opción en amarillo es la respuesta oficial, pero tiene controversia.`;
-    } else if (!hasAnswer) {
-      fb.className = 'feedback-box';
-      fb.style.background = 'var(--surface2)';
-      fb.style.border = '1px solid var(--border)';
-      fb.innerHTML = `📝 <strong>Respuesta registrada.</strong> No hay clave disponible para esta pregunta.`;
     } else if (correct) {
       const isMastered = data.mastered.includes(q.id);
       if (isMastered) {
@@ -1990,24 +2008,20 @@ function selectStudyAnswer(key, q) {
   const impugnada  = estado === 'impugnada';
   const dudosa     = estado === 'dudosa';
   const fuentes    = q.fuentes || null;  // [{letra, fuente}]
-  const hasAnswer  = q.correcta !== null;
   // Con fuentes: correcto si la letra elegida coincide con alguna de las fuentes
-  const correctLetras = fuentes ? fuentes.map(f => f[0]) : (hasAnswer ? [q.correcta] : []);
+  const correctLetras = fuentes ? fuentes.map(f => f[0]) : [q.correcta];
   const correct    = correctLetras.includes(key);
 
   data.answered[q.id] = { selectedKey:key, correct };
 
-  if (hasAnswer || fuentes) {
+  {
     if (correct) {
       data.streaks[q.id] = (data.streaks[q.id]||0)+1;
-      if (data.streaks[q.id] >= 5) {
-        const di = data.difficult.indexOf(q.id);
-        if (di !== -1) data.difficult.splice(di,1);
-      }
+      if (data.streaks[q.id] >= 5) removeHard(q);
       if (data.streaks[q.id] >= 10 && !data.mastered.includes(q.id)) data.mastered.push(q.id);
     } else {
       data.streaks[q.id] = 0;
-      if (!data.difficult.includes(q.id)) data.difficult.push(q.id);
+      addHard(q);
     }
   }
   saveData(data);
@@ -2034,12 +2048,10 @@ function selectStudyAnswer(key, q) {
       }
     } else if (dudosa && letra === q.correcta) {
       btn.classList.add('doubtful');
-    } else if (hasAnswer && letra === q.correcta) {
+    } else if (letra === q.correcta) {
       btn.classList.add('correct');
-    } else if (hasAnswer && letra === key && !correct) {
+    } else if (letra === key && !correct) {
       btn.classList.add('wrong');
-    } else if (!hasAnswer && letra === key) {
-      btn.classList.add('selected-exam');
     }
   });
 
@@ -2072,11 +2084,6 @@ function selectStudyAnswer(key, q) {
     fb.style.background = 'rgba(245,158,11,0.1)';
     fb.style.border = '1px solid rgba(245,158,11,0.3)';
     fb.innerHTML = `⚠️ <strong>Respuesta dudosa.</strong> La opción marcada en amarillo es la respuesta oficial, pero esta pregunta tiene controversia. Contrástala con tu material.`;
-  } else if (!hasAnswer) {
-    fb.className = 'feedback-box';
-    fb.style.background = 'var(--surface2)';
-    fb.style.border = '1px solid var(--border)';
-    fb.innerHTML = `📝 <strong>Respuesta registrada.</strong> No hay clave disponible para esta pregunta.`;
   } else if (correct) {
     if (isMastered) {
       fb.className = 'feedback-box ok';
@@ -2186,8 +2193,7 @@ function goToQuestion() {
 
 function toggleTag(type) {
   const q = studyList[studyIndex];
-  const i = data.difficult.indexOf(q.id);
-  if (i === -1) data.difficult.push(q.id); else data.difficult.splice(i,1);
+  if (isHardQ(q)) removeHard(q); else addHard(q);
   saveData(data);
   updateHardBtn(q.id);
 }
@@ -2329,7 +2335,7 @@ function confirmFinishExam() {
 // ══════════════════════════════════════════
 function renderStats() {
   const totalQs    = PREGUNTAS.length;
-  const nDifficult = data.difficult.length;
+  const nDifficult = data.difficultFisio.length + data.difficultGeneral.length;
   const nMastered  = data.mastered.length;
   const pctDiff    = Math.round(nDifficult / totalQs * 100);
   const pctMast    = Math.round(nMastered  / totalQs * 100);
@@ -2423,9 +2429,9 @@ function renderStats() {
   else masteredQs.forEach(q => { html += `<div class="q-list-item"><span class="badge" style="background:rgba(167,139,250,0.15);color:#a78bfa">🏆</span><span>#${q.id} · ${q.pregunta}</span></div>`; });
   html += `</div></div>`;
 
-  const hardQs = PREGUNTAS.filter(q=>data.difficult.includes(q.id));
+  const hardQs = PREGUNTAS.filter(q => isHardQ(q));
   html += `<div><div class="section-title">🔴 Difíciles (${hardQs.length})</div>`;
-  if (hardQs.length) html += `<div style="margin-bottom:8px"><button class="btn-primary" style="font-size:0.85rem;padding:10px 16px" onclick="launchDifficult()">📋 Repasar difíciles</button></div>`;
+  if (hardQs.length) html += `<div style="margin-bottom:8px"><button class="btn-primary" style="font-size:0.85rem;padding:10px 16px" onclick="launchDifficult('all')">📋 Repasar difíciles</button></div>`;
   html += `<div style="display:flex;flex-direction:column;gap:8px">`;
   if (!hardQs.length) html += `<div class="empty-state">¡Sin preguntas difíciles de momento!</div>`;
   else hardQs.forEach(q => { html += `<div class="q-list-item"><span class="badge hard">🔴</span><span>#${q.id} · ${q.pregunta}</span></div>`; });
@@ -2451,12 +2457,24 @@ function renderStats() {
 // ══════════════════════════════════════════
 //  DIFFICULT SCREEN
 // ══════════════════════════════════════════
-function launchDifficult() {
-  const hardQs = PREGUNTAS.filter(q => data.difficult.includes(q.id));
-  if (!hardQs.length) { alert('No tienes preguntas marcadas como difíciles todavía.'); return; }
+function launchDifficult(mode) {
+  mode = mode || 'all';
+  let hardQs;
+  let label;
+  if (mode === 'fisio') {
+    hardQs = PREGUNTAS.filter(q => q.categoria === 'fisio' && data.difficultFisio.includes(q.id));
+    label  = 'Difíciles Fisio';
+  } else if (mode === 'general') {
+    hardQs = PREGUNTAS.filter(q => q.categoria === 'general' && data.difficultGeneral.includes(q.id));
+    label  = 'Difíciles Común';
+  } else {
+    hardQs = PREGUNTAS.filter(q => isHardQ(q));
+    label  = 'Difíciles Mixto';
+  }
+  if (!hardQs.length) { alert('No tienes preguntas marcadas en esta categoría todavía.'); return; }
   studyList  = shuffle(hardQs.slice());
   studyIndex = 0;
-  document.getElementById('study-title').textContent = `Repaso Difíciles · 🔀 (${studyList.length})`;
+  document.getElementById('study-title').textContent = `📋 ${label} · 🔀 (${studyList.length})`;
   showScreen('study');
   renderStudyQ();
 }
@@ -2477,12 +2495,18 @@ function renderDifficult() {
   let html = '';
 
   // ── DIFÍCILES ──
+  const hardFisio    = PREGUNTAS.filter(q => q.categoria === 'fisio'    && data.difficultFisio.includes(q.id));
+  const hardGeneral  = PREGUNTAS.filter(q => q.categoria === 'general'  && data.difficultGeneral.includes(q.id));
   html += `
-    <div style="margin-bottom:4px">
-      <button class="btn-primary" style="${hardQs.length ? '' : 'opacity:0.4;pointer-events:none'}"
-        onclick="launchDifficult()">📋 Repasar difíciles (${hardQs.length})</button>
-    </div>
-    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleSection('hard-list')">
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      <button class="btn-primary" style="${hardFisio.length ? '' : 'opacity:0.4;pointer-events:none'}"
+        onclick="launchDifficult('fisio')">🖐️ Repasar Fisio (${hardFisio.length})</button>
+      <button class="btn-primary" style="${hardGeneral.length ? '' : 'opacity:0.4;pointer-events:none'}"
+        onclick="launchDifficult('general')">📋 Repasar Común (${hardGeneral.length})</button>
+      <button class="btn-primary" style="${hardQs.length ? '' : 'opacity:0.4;pointer-events:none'};background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3)"
+        onclick="launchDifficult('all')">🔀 Repasar Mixto (${hardQs.length})</button>
+    </div>`;
+  html += `<div class="section-title" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleSection('hard-list')">
       <span>🔴 Difíciles — ${hardQs.length} preguntas</span>
       <span id="hard-list-icon" style="font-size:0.9rem;color:var(--muted)">▼</span>
     </div>

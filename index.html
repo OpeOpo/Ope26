@@ -333,7 +333,7 @@
   <!-- HOME -->
   <div id="home" class="screen active">
     <div class="logo-area">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:8px">
         <button onclick="document.getElementById('info-home').style.display='flex'" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--sans)"><span style="font-weight:700;font-style:italic">i</span> Info</button>
         <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️</button>
       </div>
@@ -2367,10 +2367,6 @@ function confirmFinishExam() {
 // ══════════════════════════════════════════
 function renderStats() {
   const totalQs    = PREGUNTAS.length;
-  const nDifficult = data.difficultFisio.length + data.difficultGeneral.length;
-  const nMastered  = data.mastered.length;
-  const pctDiff    = Math.round(nDifficult / totalQs * 100);
-  const pctMast    = Math.round(nMastered  / totalQs * 100);
 
   // Helper: clave de bloque (misma lógica que studyNext)
   function blockKey(qs) {
@@ -2380,16 +2376,6 @@ function renderStats() {
   let html = `
     <div>
       <div class="section-title">Global</div>
-      <div class="global-row" style="grid-template-columns:1fr 1fr">
-        <div class="g-card">
-          <div class="gv" style="color:var(--red)">${nDifficult} <span style="font-size:0.75rem;color:var(--muted)">${pctDiff}%</span></div>
-          <div class="gl">Difíciles</div>
-        </div>
-        <div class="g-card">
-          <div class="gv" style="color:#a78bfa">${nMastered} <span style="font-size:0.75rem;color:var(--muted)">${pctMast}%</span></div>
-          <div class="gl">Dominadas</div>
-        </div>
-      </div>
     </div>
     <div>
       <div class="section-title">Por Bloque</div>
@@ -2455,19 +2441,7 @@ function renderStats() {
 
   html += `</div></div>`;
 
-  const masteredQs = PREGUNTAS.filter(q=>data.mastered.includes(q.id));
-  html += `<div><div class="section-title">🏆 Dominadas (${masteredQs.length})</div><div style="display:flex;flex-direction:column;gap:8px">`;
-  if (!masteredQs.length) html += `<div class="empty-state">Acierta la misma pregunta 10 veces consecutivas.</div>`;
-  else masteredQs.forEach(q => { html += `<div class="q-list-item"><span class="badge" style="background:rgba(167,139,250,0.15);color:#a78bfa">🏆</span><span>#${q.id} · ${q.pregunta}</span></div>`; });
-  html += `</div></div>`;
 
-  const hardQs = PREGUNTAS.filter(q => isHardQ(q));
-  html += `<div><div class="section-title">🔴 Difíciles (${hardQs.length})</div>`;
-  if (hardQs.length) html += `<div style="margin-bottom:8px"><button class="btn-primary" style="font-size:0.85rem;padding:10px 16px" onclick="showScreen('difficult')">📋 Repasar difíciles</button></div>`;
-  html += `<div style="display:flex;flex-direction:column;gap:8px">`;
-  if (!hardQs.length) html += `<div class="empty-state">¡Sin preguntas difíciles de momento!</div>`;
-  else hardQs.forEach(q => { html += `<div class="q-list-item"><span class="badge hard">🔴</span><span>#${q.id} · ${q.pregunta}</span></div>`; });
-  html += `</div></div>`;
 
   if (data.examsCount > 0) {
     const le = data.lastExam;

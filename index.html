@@ -356,7 +356,7 @@
 
     <!-- Texto actualización centrado -->
     <div style="position:absolute;bottom:70px;left:0;right:0;text-align:center;pointer-events:none">
-      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 25/05</span>
+      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 26/05</span>
     </div>
     <!-- Botón estadísticas pequeño abajo derecha -->
     <div style="position:absolute;bottom:24px;right:20px">
@@ -437,6 +437,39 @@
         Sí, reiniciar
       </button>
       <button onclick="document.getElementById('reset-block-modal').style.display='none'"
+        style="background:transparent;border:1px solid var(--border);color:var(--text);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+
+  <!-- MODAL RETOMAR SESIÓN -->
+  <div id="resume-session-modal" style="
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:24px">
+    <div style="
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">▶️ Sesión en curso</div>
+        <p id="resume-session-desc" style="font-size:0.88rem;line-height:1.6;color:var(--muted)"></p>
+      </div>
+      <button onclick="resumeSession()"
+        style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--accent);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        ▶️ Retomar donde lo dejé
+      </button>
+      <button onclick="freshSession()"
+        style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        🔄 Empezar de nuevo
+      </button>
+      <button onclick="document.getElementById('resume-session-modal').style.display='none'"
         style="background:transparent;border:1px solid var(--border);color:var(--text);
                border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
                cursor:pointer;font-family:var(--sans)">
@@ -605,7 +638,7 @@
   <!-- SELECTOR -->
   <div id="selector" class="screen">
     <div class="header">
-      <button class="btn-back" onclick="goHome()">←</button>
+      <button class="btn-back" onclick="showScreen('selector')">←</button>
       <h2 id="selector-title">Seleccionar bloque</h2>
       <button id="selector-info-btn" onclick="openSelectorInfo()" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:var(--sans)"><span style="font-weight:700;font-style:italic">i</span> Info</button>
       <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-selector">☀️</button>
@@ -633,7 +666,7 @@
   <!-- STUDY -->
   <div id="study" class="screen">
     <div class="header">
-      <button class="btn-back" onclick="goHome()">←</button>
+      <button class="btn-back" onclick="leaveStudy()">←</button>
       <h2 id="study-title">Modo Estudio</h2>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <div style="display:flex;align-items:center;gap:6px">
@@ -1506,7 +1539,7 @@ const EXAM_TOTAL       = 100; // preguntas por examen
 const LS_KEY = 'opoTest_v2';
 
 function defaultData() {
-  return { answered:{}, favorites:[], difficultFisio:[], difficultGeneral:[], mastered:[], streaks:{}, examsCount:0, lastExam:null, savedExams:[], examSeenIds:{}, blockStats:{} };
+  return { answered:{}, favorites:[], difficultFisio:[], difficultGeneral:[], mastered:[], streaks:{}, examsCount:0, lastExam:null, savedExams:[], examSeenIds:{}, blockStats:{}, activeSession:null };
 }
 function migrateData(d) {
   if (!d.mastered)    d.mastered    = [];
@@ -1521,6 +1554,7 @@ function migrateData(d) {
   if (!d.savedExams)  d.savedExams  = [];
   if (!d.examSeenIds) d.examSeenIds = {};
   if (!d.blockStats)  d.blockStats  = {};
+  if (d.activeSession === undefined) d.activeSession = null;
   return d;
 }
 function loadData() {
@@ -1622,6 +1656,7 @@ function showScreen(id) {
   if (id === 'home')         renderHome();
 }
 function goHome() { showScreen('home'); }
+function leaveStudy() { showScreen('selector'); }
 
 function resetStats() {
   document.getElementById('reset-stats-modal').style.display = 'flex';
@@ -1790,7 +1825,51 @@ function renderBlocksList() {
   document.getElementById('blocks-list').innerHTML = html;
 }
 
+// Variable temporal para saber qué bloque está pendiente de confirmar
+let pendingBlockKey = null;
+
 function launchStudy(blockKey) {
+  // Si hay sesión guardada para este bloque, preguntar
+  const session = data.activeSession;
+  if (session && session.blockKey === blockKey) {
+    pendingBlockKey = blockKey;
+    const label = blockKey === null ? 'Todas' : getBlocks().find(b => b.key === blockKey).label;
+    const orderLabel = session.order === 'random' ? '🔀 Aleatorio' : '🔢 Ordenado';
+    const pos = session.index + 1;
+    const total = session.ids.length;
+    document.getElementById('resume-session-desc').textContent =
+      `Tienes una sesión a medias en "${label}" (${orderLabel}) — pregunta ${pos} de ${total}. ¿Qué quieres hacer?`;
+    document.getElementById('resume-session-modal').style.display = 'flex';
+    return;
+  }
+  startFreshStudy(blockKey);
+}
+
+function resumeSession() {
+  document.getElementById('resume-session-modal').style.display = 'none';
+  const session = data.activeSession;
+  if (!session) return;
+  // Reconstruir studyList en el orden guardado
+  const idMap = Object.fromEntries(PREGUNTAS.map(q => [q.id, q]));
+  studyList = session.ids.map(id => idMap[id]).filter(Boolean);
+  studyIndex = session.index;
+  currentBlockKey = session.blockKey;
+  const label = session.blockKey === null ? 'Todas' : getBlocks().find(b => b.key === session.blockKey).label;
+  const orderIcon = session.order === 'random' ? ' · 🔀' : ' · 🔢';
+  document.getElementById('study-title').textContent = `Estudio · ${label}${orderIcon}`;
+  document.getElementById('study-all-notice').style.display = session.blockKey === null ? 'block' : 'none';
+  showScreen('study');
+  renderStudyQ();
+}
+
+function freshSession() {
+  document.getElementById('resume-session-modal').style.display = 'none';
+  data.activeSession = null;
+  saveData(data);
+  startFreshStudy(pendingBlockKey);
+}
+
+function startFreshStudy(blockKey) {
   const pool = blockKey === null
     ? [...PREGUNTAS]
     : getBlocks().find(b => b.key === blockKey).questions.slice();
@@ -1808,6 +1887,10 @@ function launchStudy(blockKey) {
   } else {
     studyIndex = 0;
   }
+
+  // Guardar sesión activa
+  data.activeSession = { blockKey, order: selectedOrder, ids: ordered.map(q => q.id), index: studyIndex };
+  saveData(data);
 
   document.getElementById('study-title').textContent = `Estudio · ${label}${orderIcon}`;
   document.getElementById('study-all-notice').style.display = blockKey === null ? 'block' : 'none';
@@ -2140,10 +2223,12 @@ function selectStudyAnswer(key, q) {
 function studyNext() {
   if (studyIndex < studyList.length - 1) {
     studyIndex++;
+    if (data.activeSession) { data.activeSession.index = studyIndex; saveData(data); }
     renderStudyQ();
   } else {
     // Última pregunta: volver a la primera
     studyIndex = 0;
+    if (data.activeSession) { data.activeSession.index = studyIndex; saveData(data); }
     renderStudyQ();
     // Si todas contestadas, mostrar modal
     const allDone = studyList.every(q => data.answered[q.id]);
@@ -2177,6 +2262,7 @@ function studyPrev() {
 function blockCompleteReset() {
   document.getElementById('block-complete-modal').style.display = 'none';
   studyList.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
+  data.activeSession = null;
   saveData(data);
   studyIndex = 0;
   renderStudyQ();
@@ -2184,6 +2270,8 @@ function blockCompleteReset() {
 
 function blockCompleteKeep() {
   document.getElementById('block-complete-modal').style.display = 'none';
+  data.activeSession = null;
+  saveData(data);
 }
 
 function resetBlock() {
@@ -2193,6 +2281,7 @@ function resetBlock() {
 function confirmResetBlock() {
   document.getElementById('reset-block-modal').style.display = 'none';
   studyList.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
+  data.activeSession = null;
   saveData(data);
   studyIndex = 0;
   renderStudyQ();

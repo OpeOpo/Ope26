@@ -1864,6 +1864,11 @@ function resumeSession() {
 
 function freshSession() {
   document.getElementById('resume-session-modal').style.display = 'none';
+  // Borrar respuestas y rachas del bloque, igual que confirmResetBlock
+  const pool = pendingBlockKey === null
+    ? PREGUNTAS
+    : getBlocks().find(b => b.key === pendingBlockKey).questions;
+  pool.forEach(q => { delete data.answered[q.id]; delete data.streaks[q.id]; });
   data.activeSession = null;
   saveData(data);
   startFreshStudy(pendingBlockKey);

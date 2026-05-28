@@ -1754,14 +1754,18 @@ function renderBlocksList() {
       const { done, total } = blockProgress(qs);
       const stats = data.blockStats[blockKey(qs)];
       if (done === total && stats && stats.completions > 0) {
-        // Recién completado: mostrar aciertos del intento recién guardado
-        const aciertos = Math.round(stats.lastPct * total / 100);
+        // Recién completado: mostrar media de todos los intentos
+        const hist = stats.history || [];
+        const avgPct = hist.length ? Math.round(hist.reduce((s,h) => s+h.pct, 0) / hist.length) : stats.lastPct;
+        const aciertos = Math.round(avgPct * total / 100);
         const vueltasStr = stats.completions === 1 ? '1 vuelta' : `${stats.completions} vueltas`;
         return `✓ ${aciertos}/${total} · ${vueltasStr}`;
       }
       if (stats && stats.completions > 0 && done === 0) {
         // Completado anteriormente, nuevo intento no empezado
-        const aciertos = Math.round(stats.lastPct * total / 100);
+        const hist = stats.history || [];
+        const avgPct = hist.length ? Math.round(hist.reduce((s,h) => s+h.pct, 0) / hist.length) : stats.lastPct;
+        const aciertos = Math.round(avgPct * total / 100);
         const vueltasStr = stats.completions === 1 ? '1 vuelta' : `${stats.completions} vueltas`;
         return `✓ ${aciertos}/${total} · ${vueltasStr}`;
       }
@@ -2488,6 +2492,7 @@ function renderStats() {
     const bk    = blockKey(b.questions);
     const stats = data.blockStats[bk] || { completions:0, lastPct:null, history:[] };
     const hist  = stats.history || [];
+    const avgPct = hist.length ? Math.round(hist.reduce(function(s,h){return s+h.pct;},0) / hist.length) : stats.lastPct;
     const color = stats.lastPct !== null
       ? (stats.lastPct >= 70 ? 'var(--green)' : stats.lastPct >= 40 ? 'var(--yellow)' : 'var(--red)')
       : 'var(--muted)';
@@ -2505,7 +2510,7 @@ function renderStats() {
       + '<div class="b-name">' + b.label + '<br><span style="font-size:0.72rem;color:var(--muted)">' + b.range + '</span></div>'
       + '<div style="text-align:right;min-width:90px">'
       + '<div style="font-size:0.78rem;color:var(--muted)">' + stats.completions + ' vuelta' + (stats.completions !== 1 ? 's' : '') + '</div>'
-      + '<div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:' + color + '">' + (stats.lastPct !== null ? stats.lastPct + '%' : '—') + '</div>'
+      + '<div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:' + color + '">' + (avgPct !== null ? 'Ø ' + avgPct + '%' : '—') + '</div>'
       + '</div></div>'
       + histRow
       + '</div>';
@@ -2517,6 +2522,7 @@ function renderStats() {
     const bk    = blockKey(b.questions);
     const stats = data.blockStats[bk] || { completions:0, lastPct:null, history:[] };
     const hist  = stats.history || [];
+    const avgPct = hist.length ? Math.round(hist.reduce(function(s,h){return s+h.pct;},0) / hist.length) : stats.lastPct;
     const color = stats.lastPct !== null
       ? (stats.lastPct >= 70 ? 'var(--green)' : stats.lastPct >= 40 ? 'var(--yellow)' : 'var(--red)')
       : 'var(--muted)';
@@ -2534,7 +2540,7 @@ function renderStats() {
       + '<div class="b-name">' + b.label + '<br><span style="font-size:0.72rem;color:var(--muted)">' + b.range + '</span></div>'
       + '<div style="text-align:right;min-width:90px">'
       + '<div style="font-size:0.78rem;color:var(--muted)">' + stats.completions + ' vuelta' + (stats.completions !== 1 ? 's' : '') + '</div>'
-      + '<div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:' + color + '">' + (stats.lastPct !== null ? stats.lastPct + '%' : '—') + '</div>'
+      + '<div style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:' + color + '">' + (avgPct !== null ? 'Ø ' + avgPct + '%' : '—') + '</div>'
       + '</div></div>'
       + histRow
       + '</div>';

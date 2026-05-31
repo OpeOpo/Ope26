@@ -356,7 +356,7 @@
 
     <!-- Texto actualización centrado -->
     <div style="position:absolute;bottom:70px;left:0;right:0;text-align:center;pointer-events:none">
-      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 28/05</span>
+      <span style="font-size:0.68rem;color:var(--muted);font-family:var(--mono)">Actualizado el 31/05</span>
     </div>
     <!-- Botón estadísticas pequeño abajo derecha -->
     <div style="position:absolute;bottom:24px;right:20px">
@@ -470,6 +470,32 @@
         🔄 Empezar de nuevo
       </button>
       <button onclick="document.getElementById('resume-session-modal').style.display='none'"
+        style="background:transparent;border:1px solid var(--border);color:var(--text);
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL PREGUNTAS SIN RESPONDER -->
+  <div id="unanswered-modal" style="
+      display:none;position:fixed;inset:0;z-index:1000;
+      background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:24px">
+    <div style="
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:28px 24px;max-width:400px;width:100%;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">⚠️ Preguntas sin responder</div>
+        <p id="unanswered-desc" style="font-size:0.88rem;line-height:1.6;color:var(--muted)"></p>
+      </div>
+      <button onclick="goToFirstUnanswered()"
+        style="background:var(--accent);border:none;color:#fff;
+               border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
+               cursor:pointer;font-family:var(--sans)">
+        Ir a la primera sin responder
+      </button>
+      <button onclick="document.getElementById('unanswered-modal').style.display='none'"
         style="background:transparent;border:1px solid var(--border);color:var(--text);
                border-radius:var(--radius);padding:15px;font-size:0.95rem;font-weight:600;
                cursor:pointer;font-family:var(--sans)">
@@ -773,8 +799,34 @@
     </div>
     <div class="result-actions">
       <button class="btn-primary"   onclick="openSelector('exam')">Nuevo examen</button>
+      <button class="btn-secondary" onclick="openExamReview()">📋 Revisar examen</button>
       <button class="btn-secondary" onclick="showScreen('saved-exams')">🗂️ Ver guardados</button>
       <button class="btn-secondary" onclick="goHome()">Volver al inicio</button>
+    </div>
+  </div>
+
+  <!-- REVISIÓN DE EXAMEN -->
+  <div id="exam-review" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="showScreen('results')">←</button>
+      <h2 id="exam-review-title">Revisión</h2>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-info">
+        <span id="review-counter">Pregunta 1 de 100</span>
+        <span id="review-status"></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="review-prog" style="width:0%"></div></div>
+    </div>
+    <div class="q-card">
+      <div class="q-num"  id="review-num"></div>
+      <div class="q-text" id="review-pregunta"></div>
+    </div>
+    <div class="options-list" id="review-opts"></div>
+    <div id="review-feedback" style="margin:12px 20px 0"></div>
+    <div class="nav-btns">
+      <button class="btn-secondary" id="review-prev-btn" onclick="reviewNav(-1)">← Ant</button>
+      <button class="btn-primary"   id="review-next-btn" onclick="reviewNav(1)">Siguiente →</button>
     </div>
   </div>
 
@@ -1391,7 +1443,7 @@ const PREGUNTAS = [
   { id:562, categoria:"general", pregunta:"Para el desarrollo de funciones de propuesta y asesoramiento, así como de participación en las organizaciones de servicios sanitarios, existirá un Consejo de Dirección en cada una de ellas, integrado por:", opciones:["El equipo directivo, las jefaturas de unidad que se determinen y una representación de personas vocales electas que formen parte de los Consejos Técnicos de participación profesional respectivos.","El equipo directivo, las jefaturas de unidad que se determinen, representantes sindicales y una representación de personas vocales electas que formen parte de los Consejos Técnicos de participación profesional respectivos.","El equipo directivo y las jefaturas de unidad que se determinen.","Todas las anteriores son falsas."], correcta:"a", estado:null },
   { id:563, categoria:"general", pregunta:"Las organizaciones de servicios sanitarios del ente público Osakidetza-Servicio Vasco de Salud podrán:", opciones:["Descentralizar la organización y su funcionamiento operativo, delegando en quienes ostenten la responsabilidad clínica facultades de gestión, aunque solo en materia de personal y siempre de acuerdo con el marco estratégico, los planes de gestión y el compromiso del contrato-programa suscrito por la organización.","Descentralizar la organización y su funcionamiento operativo, delegando en quienes ostenten la responsabilidad clínica facultades de gestión, pero solo en materia económica y siempre de acuerdo con el marco estratégico, los planes de gestión y el compromiso del contrato-programa suscrito por la organización.","Descentralizar la organización y su funcionamiento operativo, delegando en quienes ostenten la responsabilidad clínica facultades de gestión tanto en materia económica como de personal, de acuerdo con el marco estratégico, los planes de gestión y el compromiso del contrato-programa suscrito por la organización.","Todas las anteriores son falsas."], correcta:"c", estado:null },
   { id:564, categoria:"general", pregunta:"En materia específica de inversiones, la competencia para ejecutar las compras de suministros que se consideren centralizadas, así como definir y/o ejecutar, en su caso, las consideradas integradas corresponde a:", opciones:["El Consejo de Administración del ente público Osakidetza-Servicio Vasco de Salud.","La organización central de administración y gestión corporativa del ente público Osakidetza-Servicio Vasco de Salud.","La organización de servicios del ente público Osakidetza-Servicio Vasco de Salud.","A quien ostente la titularidad de la Dirección-Gerencia de cada organización de servicios sanitarios del Osakidetza-Servicio Vasco de Salud."], correcta:"b", estado:null },
-  { id:565, categoria:"general", pregunta:"En el ámbito de una organización de servicios sanitarios del ente público Osakidetza-Servicio Vasco de Salud, presidir los Consejos Técnicos de participación profesional y promover su eficaz funcionamiento es una tarea que corresponde a:", opciones:["La Dirección General del Ente.","Quien ostente la titularidad de la Dirección-Gerencia del Ente.","La Dirección Médica del Ente.","Ninguna de las anteriores."], correcta:"d", estado:null, fuentes:[["d", "ESK"], ["c", "LAB"], ["c", "Satse"]] },
+  { id:565, categoria:"general", pregunta:"En el ámbito de una organización de servicios sanitarios del ente público Osakidetza-Servicio Vasco de Salud, presidir los Consejos Técnicos de participación profesional y promover su eficaz funcionamiento es una tarea que corresponde a:", opciones:["La Dirección General del Ente.","Quien ostente la titularidad de la Dirección-Gerencia del Ente.","La Dirección Médica del Ente.","Ninguna de las anteriores."], correcta:"d", estado:null },
   { id:566, categoria:"general", pregunta:"Según el Artículo 1 del Decreto 100/2018 de las organizaciones sanitarias integradas del ente público Osakidetza-Servicio Vasco de Salud, ¿qué dos niveles asistenciales se integran en las Organizaciones Sanitarias Integradas (OSI) de Osakidetza?", opciones:["Atención especializada y Atención de Urgencias.","Salud Pública y Servicios Sociosanitarios.","Atención hospitalaria y Atención de Emergencias.","Atención primaria y Atención hospitalaria."], correcta:"d", estado:null },
   { id:567, categoria:"general", pregunta:"Según el Artículo 2.1 del Decreto 100/2018 de las organizaciones sanitarias integradas del ente público Osakidetza-Servicio Vasco de Salud, ¿qué objetivo último persigue la configuración de las OSI?", opciones:["Reducir el gasto farmacéutico mediante la unificación de compras.","Favorecer la integración clínica de manera que la atención se articule en torno a la persona.","Centralizar los servicios de atención primaria en las sedes hospitalarias.","Eliminar las categorías profesionales de atención primaria para unificarlas con las hospitalarias."], correcta:"b", estado:null },
   { id:568, categoria:"general", pregunta:"Según el Artículo 1 del Decreto 100/2018 de las organizaciones sanitarias integradas del ente público Osakidetza-Servicio Vasco de Salud, ¿bajo qué principio fundamental actuarán las Organizaciones Sanitarias Integradas (OSI) del ente público Osakidetza-Servicio Vasco de Salud ?", opciones:["Principio de coordinación territorial y sectorial.","Principio de jerarquía funcional única.","Principio de autonomía económico-financiera y de gestión.","Principio de centralización de todos los recursos."], correcta:"c", estado:null },
@@ -1497,7 +1549,7 @@ const PREGUNTAS = [
   { id:668, categoria:"general", pregunta:"En relación con la violencia machista contra las mujeres, el Plan II Plan para la Igualdad de Mujeres y Hombres en Osakidetza (2025-2028) establece como línea de actuación prioritaria:", opciones:["El refuerzo de la prevención, la detección precoz y la mejora de la respuesta asistencial integrada desde el sistema de salud.","La derivación inmediata de cualquier caso detectado a servicios jurídicos externos, sin intervención del personal sanitario.","La creación de un registro anónimo donde las personas profesionales puedan denunciar conductas sin seguimiento posterior.","La limitación de la atención asistencial únicamente a las consecuencias físicas derivadas de la violencia."], correcta:"a", estado:null },
   { id:669, categoria:"general", pregunta:"El III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028 establece respecto a los mensajes audiovisuales que:", opciones:["Deben emitirse en la lengua que decidan las personas responsable de las unidades que utilizan estos sistemas audiovisuales.","Deben emitirse en las dos lenguas oficiales, primero en castellano y luego en euskera.","Deben emitirse en las dos lenguas oficiales, primero en euskera y luego en castellano.","Deben emitirse en una de las dos lenguas oficiales."], correcta:"c", estado:null },
   { id:670, categoria:"general", pregunta:"De acuerdo con el III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta correcta:", opciones:["Por aplicación de la Ley Orgánica de Protección de Datos Personales y garantía de los derechos digitales no puede constar en los datos personales de cada paciente de Osakidetza su idioma de preferencia para las comunicaciones con Osakidetza.","El signo azul con la letra e indica que la persona paciente no tiene competencia para comunicarse en un idioma que no sea el euskera para las comunicaciones orales con Osakidetza.","En los datos personales de cada paciente, se registrará su idioma de preferencia para las comunicaciones orales con Osakidetza .","A las personas que elijan el euskera como lengua prioritaria en sus comunicaciones con Osakidetza solo se les deberá ofrecer servicios en euskera."], correcta:"c", estado:null },
-  { id:671, categoria:"general", pregunta:"En atención al III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta correcta:", opciones:["“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente llevada a cabo en 2017.","Se atribuye a todas las direcciones y gerencias de Osakidetza la responsabilidad de realizar la campaña con el lema “Aukeratu zeure hizkuntza/Elige tu lengua”.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el primer año de planificación.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el tercer año de planificación."], correcta:"a", estado:null, fuentes:[["a", "LAB"], ["c", "ESK"], ["c", "Satse"]] },
+  { id:671, categoria:"general", pregunta:"En atención al III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta correcta:", opciones:["“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente llevada a cabo en 2017.","Se atribuye a todas las direcciones y gerencias de Osakidetza la responsabilidad de realizar la campaña con el lema “Aukeratu zeure hizkuntza/Elige tu lengua”.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el primer año de planificación.","“Aukeratu zeure hizkuntza/Elige tu lengua” es el lema de la campaña de activación del registro de la lengua preferente de cada paciente que realizará Osakidetza durante el tercer año de planificación."], correcta:"a", estado:null },
   { id:672, categoria:"general", pregunta:"El III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028 contempla que tanto en los servicios de recepción y admisión, como en las unidades asistenciales y administrativas a toda la ciudadanía vascohablante debe garantizarse:", opciones:["La recepción en euskera.","La recepción en euskera solo cuando la comunicación oral con pacientes y personas usuarias sea de modo presencial.","La recepción en euskera solo cuando la comunicación con pacientes y personas usuarias sea telefónicamente.","La recepción en euskera solo por las y los empleados que sepan en euskera."], correcta:"a", estado:null },
   { id:673, categoria:"general", pregunta:"El III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028 establece que, en los escritos individualizados de respuesta a solicitudes y reclamaciones de pacientes o personas usuarias de Osakidetza se utilizará:", opciones:["La lengua utilizada por cada ciudadano o ciudadana.","Siempre el euskera como lengua preferente.","Siempre las dos lenguas oficiales independientemente de la lengua utilizada por cada ciudadano o ciudadana.","Ambas lenguas oficiales, siendo los escritos contestados primero en euskera y luego en castellano."], correcta:"a", estado:null },
   { id:674, categoria:"general", pregunta:"Siguiendo lo previsto en el III Plan de Normalización del Uso del Euskera en Osakidetza 2022-2028, señale la respuesta que no es correcta:", opciones:["Se pondrá a disposición del personal bilingüe que lo desee diferentes elementos identificativos portadores del circulo azul con la letra e, signo que invita a relacionarse en euskera.","El signo azul y la letra e solo se utilizará para la identificación individual del personal bilingüe.","En los centros de salud, consultorios y unidades hospitalarias, deberá estar colocado, de modo visible, el cartel que explica a las personas usuarias el significado del signo identificativo con la letra e.","Se estudiará introducir una variante del círculo azul con la letra e para el personal dispuesto a que le hablen en euskera pero que muestra dificultades para expresarse en ciertas situaciones."], correcta:"b", estado:null },
@@ -2424,7 +2476,20 @@ function confirmLeaveExam() {
 }
 
 function finishExam() {
+  const blank = examList.filter((q,i) => !examAnswers[i]).length;
+  if (blank > 0) {
+    document.getElementById('unanswered-desc').textContent =
+      `Tienes ${blank} pregunta${blank !== 1 ? 's' : ''} sin responder. En este examen no restan las incorrectas, ¡contesta todas!`;
+    document.getElementById('unanswered-modal').style.display = 'flex';
+    return;
+  }
   document.getElementById('finish-exam-modal').style.display = 'flex';
+}
+
+function goToFirstUnanswered() {
+  document.getElementById('unanswered-modal').style.display = 'none';
+  const idx = examList.findIndex((q,i) => !examAnswers[i]);
+  if (idx !== -1) { examIndex = idx; renderExamQ(); }
 }
 
 function confirmFinishExam() {
@@ -2466,6 +2531,99 @@ function confirmFinishExam() {
   v.className   = 'verdict '+(parseFloat(nota)>=5?'pass':'fail');
   showScreen('results');
 }
+
+// ══════════════════════════════════════════
+//  REVISIÓN POST-EXAMEN
+// ══════════════════════════════════════════
+let reviewIndex = 0;
+let reviewList  = []; // [{examIdx, q, ans}] solo falladas/en blanco
+
+function openExamReview() {
+  if (!examList.length) return;
+  reviewList = examList
+    .map((q, i) => ({ examIdx: i, q, ans: examAnswers[i] || null }))
+    .filter(item => !item.ans || item.ans !== item.q.correcta);
+
+  if (!reviewList.length) {
+    document.getElementById('exam-review-title').textContent = 'Revisión · ¡Todo correcto!';
+    reviewIndex = 0;
+    showScreen('exam-review');
+    document.getElementById('review-opts').innerHTML = '';
+    document.getElementById('review-feedback').innerHTML =
+      '<div class="feedback-box ok" style="margin:16px 20px 0">🏆 ¡Perfecto! No tienes ninguna pregunta fallada.</div>';
+    document.getElementById('review-counter').textContent = '';
+    document.getElementById('review-prog').style.width = '100%';
+    document.getElementById('review-num').textContent = '';
+    document.getElementById('review-pregunta').textContent = '';
+    document.getElementById('review-status').textContent = '';
+    document.getElementById('review-prev-btn').style.display = 'none';
+    const nextBtn = document.getElementById('review-next-btn');
+    nextBtn.textContent = 'Volver a resultados';
+    nextBtn.onclick = () => showScreen('results');
+    return;
+  }
+
+  reviewIndex = 0;
+  const nWrong = reviewList.length;
+  const nOk    = examList.length - nWrong;
+  document.getElementById('exam-review-title').textContent = `Revisión · ${nOk}✓ ${nWrong}✗`;
+  showScreen('exam-review');
+  renderReviewQ();
+}
+
+function renderReviewQ() {
+  const item = reviewList[reviewIndex];
+  const { q, ans } = item;
+  const keys = ['a','b','c','d'];
+  const isBlank = !ans;
+
+  document.getElementById('review-counter').textContent =
+    `Fallada ${reviewIndex+1} de ${reviewList.length}`;
+  document.getElementById('review-prog').style.width =
+    ((reviewIndex+1)/reviewList.length*100).toFixed(1)+'%';
+  document.getElementById('review-num').textContent      = `Pregunta #${q.id}`;
+  document.getElementById('review-pregunta').textContent = q.pregunta;
+
+  const statusEl = document.getElementById('review-status');
+  if (isBlank) { statusEl.textContent = '— Sin responder'; statusEl.style.color = 'var(--muted)'; }
+  else         { statusEl.textContent = '✗ Incorrecta';    statusEl.style.color = 'var(--red)'; }
+
+  const optsEl = document.getElementById('review-opts');
+  optsEl.innerHTML = '';
+  keys.forEach((k,i) => {
+    const btn = document.createElement('button');
+    btn.disabled = true;
+    let cls = 'opt-btn';
+    if (k === q.correcta)           cls += ' correct';
+    else if (k === ans && !isBlank) cls += ' wrong';
+    btn.className = cls;
+    btn.innerHTML = `<span class="opt-label">${k.toUpperCase()}</span><span>${q.opciones[i]}</span>`;
+    optsEl.appendChild(btn);
+  });
+
+  const fb = document.getElementById('review-feedback');
+  if (isBlank) {
+    fb.innerHTML = `<div class="feedback-box ko">— Sin responder. Correcta: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong></div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback-box ko">❌ Respondiste <strong>${ans.toUpperCase()}</strong>. Correcta: <strong>${q.correcta.toUpperCase()}) ${q.opciones[keys.indexOf(q.correcta)]}</strong></div>`;
+  }
+
+  document.getElementById('review-prev-btn').style.display = reviewIndex > 0 ? 'flex' : 'none';
+  const nextBtn = document.getElementById('review-next-btn');
+  if (reviewIndex === reviewList.length - 1) {
+    nextBtn.textContent = 'Volver a resultados';
+    nextBtn.onclick = () => showScreen('results');
+  } else {
+    nextBtn.textContent = 'Siguiente →';
+    nextBtn.onclick = () => reviewNav(1);
+  }
+}
+
+function reviewNav(dir) {
+  reviewIndex = Math.max(0, Math.min(reviewList.length-1, reviewIndex+dir));
+  renderReviewQ();
+}
+
 
 // ══════════════════════════════════════════
 //  STATS
